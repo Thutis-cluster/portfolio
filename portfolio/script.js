@@ -1,4 +1,14 @@
 // EMAILJS SETUP
+fetch("https://your-backend.onrender.com/contact", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name: form.name.value,
+    email: form.email.value,
+    message: form.message.value
+  })
+});
+
 document.addEventListener("DOMContentLoaded", () => {
 
   emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key ONLY
