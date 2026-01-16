@@ -1,29 +1,41 @@
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize EmailJS (public key only)
+emailjs.init("a3wBtn2bKfskDS4Sa");
 
-  emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key ONLY
+// Fade in all sections
+document.querySelectorAll(".fade-in").forEach(section => {
+  section.classList.add("show");
+});
 
-  const form = document.getElementById("contact-form");
+// Contact form
+const form = document.getElementById("contact-form");
 
-  form.addEventListener("submit", e => {
+if (form) {
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
 
     const btn = form.querySelector("button");
     btn.textContent = "Sending...";
     btn.disabled = true;
 
-    emailjs.sendForm(
-      "SERVICE_ID",
-      "TEMPLATE_ID",
-      form
-    ).then(() => {
-      alert("✅ Message sent successfully!");
-      form.reset();
-    }).catch(() => {
-      alert("❌ Failed to send message.");
-    }).finally(() => {
-      btn.textContent = "Send Message";
-      btn.disabled = false;
-    });
-  });
+    // Replace with your EmailJS IDs
+    const SERVICE_ID = "service_9a3fush";
+    const TEMPLATE_ID = "template_3lwzm3g";
 
-});
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
+      .then(() => {
+        alert("✅ Message sent successfully!");
+        form.reset();
+      })
+      .catch(err => {
+        console.error("EmailJS error:", err);
+        alert("❌ Failed to send message. Check console for details.");
+      })
+      .finally(() => {
+        btn.textContent = "Send Message";
+        btn.disabled = false;
+      });
+  });
+} else {
+  console.error("Contact form not found in DOM!");
+}
+
