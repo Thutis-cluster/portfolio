@@ -1,8 +1,18 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  // Fetch EmailJS config from backend
+  let serviceId, templateId, publicKey;
+  try {
+    const res = await fetch("/emailjs-config");
+    const data = await res.json();
+    serviceId = data.serviceId;
+    templateId = data.templateId;
+    publicKey = data.publicKey;
+    emailjs.init(publicKey);
+  } catch (err) {
+    console.error("Failed to load EmailJS config:", err);
+  }
 
-  // ==========================
-  // FADE-IN SECTIONS
-  // ==========================
+  // Fade-in sections
   const sections = document.querySelectorAll(".fade-in");
   const revealOnScroll = () => {
     sections.forEach(section => {
@@ -14,9 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.addEventListener("scroll", revealOnScroll);
   revealOnScroll();
 
-  // ==========================
-  // SMOOTH NAV SCROLL
-  // ==========================
+  // Smooth nav scroll
   document.querySelectorAll("nav a").forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
@@ -25,55 +33,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // ==========================
-  // SCROLL TO TOP BUTTON
-  // ==========================
+  // Scroll-to-top
   const scrollTopBtn = document.getElementById("scrollTopBtn");
-  if (scrollTopBtn) {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 300) scrollTopBtn.classList.add("show");
-      else scrollTopBtn.classList.remove("show");
-    });
-    scrollTopBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) scrollTopBtn.classList.add("show");
+    else scrollTopBtn.classList.remove("show");
+  });
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
-  // ==========================
-  // EMAILJS FORM
-  // ==========================
+  // Contact form
   const form = document.getElementById("contact-form");
-  if (form) {
-    try {
-      // Fetch IDs from your backend (Render)
-      const res = await fetch("/emailjs-config");
-      const { serviceId, templateId, publicKey } = await res.json();
+  if (form && serviceId && templateId) {
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const btn = form.querySelector("button");
+      btn.textContent = "Sending...";
+      btn.disabled = true;
 
-      emailjs.init(publicKey);
-
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        const btn = form.querySelector("button");
-        btn.textContent = "Sending...";
-        btn.disabled = true;
-
-        emailjs.sendForm(serviceId, templateId, form)
-          .then(() => {
-            alert("✅ Message sent successfully!");
-            form.reset();
-          })
-          .catch(err => {
-            console.error("EmailJS error:", err);
-            alert("❌ Failed to send message. Check console.");
-          })
-          .finally(() => {
-            btn.textContent = "Send Message";
-            btn.disabled = false;
-          });
-      });
-
-    } catch (err) {
-      console.error("Failed to fetch EmailJS config:", err);
-    }
+      emailjs.sendForm(serviceId, templateId, form)
+        .then(() => {
+          alert("✅ Message sent successfully!");
+          form.reset();
+        })
+        .catch(err => {
+          console.error("EmailJS error:", err);
+          alert("❌ Failed to send message. Check console.");
+        })
+        .finally(() => {
+          btn.textContent = "Send Message";
+          btn.disabled = false;
+        });
+    });
   }
 });
