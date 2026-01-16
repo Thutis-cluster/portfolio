@@ -7,21 +7,21 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, "../"))); // adjust path if needed
+// Serve frontend files from the root of the project
+app.use(express.static(path.join(__dirname, "../"))); 
 
-// Route to provide EmailJS config (frontend safe)
+// Provide EmailJS config to frontend
 app.get("/emailjs-config", (req, res) => {
   res.json({
-    publicKey: process.env.EMAILJS_PUBLIC_KEY,   // safe to expose
-    serviceId: process.env.EMAILJS_SERVICE_ID,   // optional if you want backend to manage
-    templateId: process.env.EMAILJS_TEMPLATE_ID // optional if you want backend to manage
+    publicKey: process.env.EMAILJS_PUBLIC_KEY,
+    serviceId: process.env.EMAILJS_SERVICE_ID,
+    templateId: process.env.EMAILJS_TEMPLATE_ID
   });
 });
 
-// Fallback to index.html for frontend routing
+// Fallback to index.html for all other routes
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../index.html")); // adjust path
+  res.sendFile(path.join(__dirname, "../index.html"));
 });
 
 app.listen(PORT, () => {
