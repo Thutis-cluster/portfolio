@@ -1,20 +1,11 @@
-// EMAILJS SETUP
-fetch("https://your-backend.onrender.com/contact", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    name: form.name.value,
-    email: form.email.value,
-    message: form.message.value
-  })
-});
-
 document.addEventListener("DOMContentLoaded", () => {
 
+  // EMAILJS INIT
   emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key ONLY
 
   const form = document.getElementById("contact-form");
 
+  // CONTACT FORM SUBMIT
   form.addEventListener("submit", e => {
     e.preventDefault();
 
@@ -50,3 +41,6 @@ window.addEventListener("scroll", () => {
     }
   });
 });
+
+// RUN ON PAGE LOAD
+window.dispatchEvent(new Event("scroll"));
