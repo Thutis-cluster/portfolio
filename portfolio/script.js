@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================
   // EMAILJS CONTACT FORM
   // ==========================
-  emailjs.init("a3wBtn2bKfskDS4Sa");
+  emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key only
 
   const form = document.getElementById("contact-form");
 
@@ -10,6 +10,18 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", function(e) {
       e.preventDefault();
       const btn = form.querySelector("button");
+
+      // Optional phone validation
+      const phoneInput = form.querySelector('input[name="phone"]');
+      if (phoneInput && phoneInput.value) {
+        const phonePattern = /^[+0-9\s\-]*$/;
+        if (!phonePattern.test(phoneInput.value)) {
+          alert("❌ Please enter a valid phone number.");
+          phoneInput.focus();
+          return; // stop submission
+        }
+      }
+
       btn.textContent = "Sending...";
       btn.disabled = true;
 
@@ -32,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sections.forEach(section => {
       const top = section.getBoundingClientRect().top;
       if (top < window.innerHeight - 100) {
-        // If section has multiple children, add staggered class
         if (section.children.length > 1) {
           section.classList.add("show", "staggered");
         } else {
@@ -43,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll(); // trigger on page load
+  revealOnScroll(); // trigger on load
 
   // ==========================
   // SMOOTH NAV SCROLL
