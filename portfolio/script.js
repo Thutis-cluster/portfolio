@@ -1,61 +1,40 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ==========================
-  // INITIALIZE EMAILJS
+  // EMAILJS CONTACT FORM
   // ==========================
-  emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key only
+  emailjs.init("a3wBtn2bKfskDS4Sa"); // public key only
 
   const form = document.getElementById("contact-form");
-  const popup = document.getElementById("thank-you-popup");
 
-  // Function to show popup messages
-  const showPopup = (message, success = true) => {
-    if (!popup) return;
-    popup.textContent = message;
-    popup.style.background = success ? "#00c851" : "#ff4444"; // green or red
-    popup.classList.add("show");
-
-    setTimeout(() => {
-      popup.classList.remove("show");
-    }, 3000); // disappears after 3 seconds
-  };
-
-  // ==========================
-  // CONTACT FORM SUBMISSION
-  // ==========================
   if (form) {
     form.addEventListener("submit", function(e) {
       e.preventDefault();
+
       const btn = form.querySelector("button");
-
-      // Optional phone validation
-      const phoneInput = form.querySelector('input[name="phone"]');
-      if (phoneInput && phoneInput.value) {
-        const phonePattern = /^[+0-9\s\-]*$/;
-        if (!phonePattern.test(phoneInput.value)) {
-          showPopup("❌ Please enter a valid phone number.", false);
-          phoneInput.focus();
-          return; // stop submission
-        }
-      }
-
       btn.textContent = "Sending...";
       btn.disabled = true;
+
+      // Debug: log form data
+      const formData = new FormData(form);
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
       const SERVICE_ID = "service_9a3fush";
       const TEMPLATE_ID = "template_3lwzm3g";
 
       emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
-        .then(() => { 
-          showPopup("✅ Message sent successfully!", true);
-          form.reset(); 
+        .then(() => {
+          alert("✅ Message sent successfully!");
+          form.reset();
         })
-        .catch(err => { 
+        .catch(err => {
           console.error("EmailJS error:", err);
-          showPopup("❌ Failed to send message.", false);
+          alert("❌ Failed to send message. Check console for details.");
         })
-        .finally(() => { 
-          btn.textContent = "Send Message"; 
-          btn.disabled = false; 
+        .finally(() => {
+          btn.textContent = "Send Message";
+          btn.disabled = false;
         });
     });
   } else {
@@ -63,19 +42,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================
-  // SCROLL FADE-IN + STAGGERED CHILD ANIMATION
+  // INITIAL FADE-IN ON PAGE LOAD
   // ==========================
   const sections = document.querySelectorAll(".fade-in");
+  sections.forEach(section => section.classList.add("show"));
 
+  // ==========================
+  // SCROLL FADE-IN ANIMATION
+  // ==========================
   const revealOnScroll = () => {
     sections.forEach(section => {
       const top = section.getBoundingClientRect().top;
       if (top < window.innerHeight - 100) {
-        if (section.children.length > 1) {
-          section.classList.add("show", "staggered");
-        } else {
-          section.classList.add("show");
-        }
+        section.classList.add("show");
       }
     });
   };
@@ -84,13 +63,15 @@ document.addEventListener("DOMContentLoaded", () => {
   revealOnScroll(); // trigger on page load
 
   // ==========================
-  // SMOOTH NAVIGATION SCROLL
+  // SMOOTH NAV SCROLL
   // ==========================
   document.querySelectorAll("nav a").forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const target = document.querySelector(link.getAttribute("href"));
-      if (target) target.scrollIntoView({ behavior: "smooth" });
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
     });
   });
 });
