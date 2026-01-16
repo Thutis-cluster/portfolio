@@ -1,65 +1,81 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // Fade-in on scroll
+
+  /* ==========================
+     EMAILJS INIT (FROM BACKEND)
+  ========================== */
+  try {
+    const res = await fetch("/emailjs-config");
+    const data = await res.json();
+
+    emailjs.init(data.publicKey);
+
+    window.EMAIL_CONFIG = data; // store globally
+  } catch (err) {
+    console.error("Failed to load EmailJS config", err);
+  }
+
+  /* ==========================
+     FADE-IN ON SCROLL
+  ========================== */
   const sections = document.querySelectorAll(".fade-in");
+
   const revealOnScroll = () => {
     sections.forEach(section => {
-      if (section.getBoundingClientRect().top < window.innerHeight - 100) {
+      const top = section.getBoundingClientRect().top;
+      if (top < window.innerHeight - 100) {
         section.classList.add("show");
       }
     });
   };
+
   window.addEventListener("scroll", revealOnScroll);
   revealOnScroll();
 
-  // Smooth nav scroll
-  document.querySelectorAll("nav a").forEach(link => {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      const target = document.querySelector(link.getAttribute("href"));
-      if(target) target.scrollIntoView({ behavior:"smooth" });
-    });
+  /* ==========================
+     THANK YOU POPUP
+  ========================== */
+  function showPopup(message, success = true) {
+    const popup = document.getElementById("popup");
+    if (!popup) return;
+
+    popup.textContent = message;
+    popup.style.background = success ? "#00c851" : "#ff4444";
+    popup.classList.add("show");
+
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 4000);
+  }
+
+  /* ==========================
+     CONTACT FORM
+  ========================== */
+  const form = document.getElementById("contact-form");
+
+  if (!form) return;
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const btn = form.querySelector("button");
+    btn.textContent = "Sending...";
+    btn.disabled = true;
+
+    const { serviceId, templateId } = window.EMAIL_CONFIG;
+
+    emailjs.sendForm(serviceId, templateId, form)
+      .then(() => {
+        form.reset();
+        showPopup("✅ Message sent successfully!", true);
+      })
+      .catch(err => {
+        console.error("EmailJS error:", err);
+        showPopup("❌ Failed to send message.", false);
+      })
+      .finally(() => {
+        btn.textContent = "Send Message";
+        btn.disabled = false;
+      });
   });
 
-  // Contact form
-  const form = document.getElementById("contact-form");
-  const popup = document.getElementById("popup");
-
-  if(form){
-    try {
-      const res = await fetch("/emailjs-config");
-      const { serviceId, templateId, publicKey } = await res.json();
-
-      emailjs.init(publicKey);
-
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        const btn = form.querySelector("button");
-        btn.textContent = "Sending...";
-        btn.disabled = true;
-
-        emailjs.sendForm(serviceId, templateId, form)
-          .then(() => {
-            form.reset();
-            showPopup("✅ Message sent successfully!");
-          })
-          .catch(err => {
-            console.error("EmailJS error:", err);
-            showPopup("❌ Failed to send message.");
-          })
-          .finally(() => {
-            btn.textContent = "Send Message";
-            btn.disabled = false;
-          });
-      });
-
-    } catch(err){
-      console.error("Failed to fetch EmailJS config:", err);
-    }
-  }
-
-  function showPopup(msg){
-    popup.textContent = msg;
-    popup.classList.add("show");
-    setTimeout(()=> popup.classList.remove("show"), 4000);
-  }
 });
