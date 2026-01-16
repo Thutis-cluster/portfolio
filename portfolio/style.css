@@ -248,4 +248,29 @@ button {
 
 button:hover { opacity: 0.9; }
 
+/* ==========================
+   THANK YOU POPUP
+========================== */
+.popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #00c851;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 999;
+}
+
+.popup.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 
