@@ -1,18 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // Fetch EmailJS config from backend
-  let serviceId, templateId, publicKey;
-  try {
-    const res = await fetch("/emailjs-config");
-    const data = await res.json();
-    serviceId = data.serviceId;
-    templateId = data.templateId;
-    publicKey = data.publicKey;
-    emailjs.init(a3wBtn2bKfskDS4Sa);
-  } catch (err) {
-    console.error("Failed to load EmailJS config:", err);
-  }
-
-  // Fade-in sections
+  // Fade-in on scroll
   const sections = document.querySelectorAll(".fade-in");
   const revealOnScroll = () => {
     sections.forEach(section => {
@@ -29,42 +16,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const target = document.querySelector(link.getAttribute("href"));
-      if (target) target.scrollIntoView({ behavior: "smooth" });
+      if(target) target.scrollIntoView({ behavior:"smooth" });
     });
-  });
-
-  // Scroll-to-top
-  const scrollTopBtn = document.getElementById("scrollTopBtn");
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) scrollTopBtn.classList.add("show");
-    else scrollTopBtn.classList.remove("show");
-  });
-  scrollTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
   // Contact form
   const form = document.getElementById("contact-form");
-  if (form && serviceId && templateId) {
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const btn = form.querySelector("button");
-      btn.textContent = "Sending...";
-      btn.disabled = true;
+  const popup = document.getElementById("popup");
 
-      emailjs.sendForm(serviceId, templateId, form)
-        .then(() => {
-          alert("✅ Message sent successfully!");
-          form.reset();
-        })
-        .catch(err => {
-          console.error("EmailJS error:", err);
-          alert("❌ Failed to send message. Check console.");
-        })
-        .finally(() => {
-          btn.textContent = "Send Message";
-          btn.disabled = false;
-        });
-    });
+  if(form){
+    try {
+      const res = await fetch("/emailjs-config");
+      const { serviceId, templateId, publicKey } = await res.json();
+
+      emailjs.init(publicKey);
+
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        const btn = form.querySelector("button");
+        btn.textContent = "Sending...";
+        btn.disabled = true;
+
+        emailjs.sendForm(serviceId, templateId, form)
+          .then(() => {
+            form.reset();
+            showPopup("✅ Message sent successfully!");
+          })
+          .catch(err => {
+            console.error("EmailJS error:", err);
+            showPopup("❌ Failed to send message.");
+          })
+          .finally(() => {
+            btn.textContent = "Send Message";
+            btn.disabled = false;
+          });
+      });
+
+    } catch(err){
+      console.error("Failed to fetch EmailJS config:", err);
+    }
+  }
+
+  function showPopup(msg){
+    popup.textContent = msg;
+    popup.classList.add("show");
+    setTimeout(()=> popup.classList.remove("show"), 4000);
   }
 });
