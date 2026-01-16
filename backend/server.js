@@ -5,11 +5,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
+// Test route
+app.get("/", (req, res) => res.send("Server running!"));
 
-// Return EmailJS IDs from environment (safe, never exposed in HTML)
+// Route to send EmailJS IDs (safe: only public key can be exposed)
 app.get("/emailjs-config", (req, res) => {
   res.json({
     serviceId: process.env.EMAILJS_SERVICE_ID,
