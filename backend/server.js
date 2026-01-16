@@ -8,41 +8,48 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve static frontend files
+// Serve frontend files
 app.use(express.static(path.join(__dirname, "public")));
 
-// Parse JSON bodies
+// Enable JSON body parsing
 app.use(express.json());
-
-// Enable CORS (optional if frontend is served from same origin)
 app.use(cors());
 
-// Initialize EmailJS
+// Initialize EmailJS with your public key from Render environment variables
 emailjs.init({
   publicKey: process.env.EMAILJS_PUBLIC_KEY,
 });
 
-// Contact form endpoint
+// POST endpoint for contact form
 app.post("/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
+  // Optional: log request payload to make sure it's correct
+  console.log("Received contact form:", { name, email, message });
+
   try {
+    // Send email using EmailJS
     await emailjs.send(
       process.env.EMAILJS_SERVICE_ID,
       process.env.EMAILJS_TEMPLATE_ID,
-      { name, email, message }
+      {
+        name,   // matches template variable {{name}}
+        email,  // matches template variable {{email}}
+        message // matches template variable {{message}}
+      }
     );
 
+    console.log("✅ Email sent successfully!");
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
+    console.error("❌ EmailJS send error:", error);
     res.status(500).json({ success: false });
   }
 });
 
-// Serve index.html for all other routes (SPA support)
+// SPA support: send index.html for all other routes
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "portfolio/index.html"));
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 // Start server
