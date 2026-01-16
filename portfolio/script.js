@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  emailjs.init("PUBLIC_KEY_HERE"); // Public key ONLY
+  emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key ONLY
 
   const form = document.getElementById("contact-form");
 
