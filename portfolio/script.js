@@ -6,27 +6,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contact-form");
 
   // CONTACT FORM SUBMIT
-  form.addEventListener("submit", e => {
-    e.preventDefault();
+  form.addEventListener("submit", async e => {
+  e.preventDefault();
 
-    const btn = form.querySelector("button");
-    btn.textContent = "Sending...";
-    btn.disabled = true;
+  const btn = form.querySelector("button");
+  btn.textContent = "Sending...";
+  btn.disabled = true;
 
-    emailjs.sendForm(
-      "SERVICE_ID",
-      "TEMPLATE_ID",
-      form
-    ).then(() => {
-      alert("✅ Message sent successfully!");
-      form.reset();
-    }).catch(() => {
-      alert("❌ Failed to send message.");
-    }).finally(() => {
-      btn.textContent = "Send Message";
-      btn.disabled = false;
+  try {
+    const res = await fetch("/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value
+      })
     });
-  });
+
+    if (!res.ok) throw new Error();
+
+    alert("✅ Message sent successfully!");
+    form.reset();
+  } catch {
+    alert("❌ Failed to send message.");
+  } finally {
+    btn.textContent = "Send Message";
+    btn.disabled = false;
+  }
+});
+
 
 });
 
