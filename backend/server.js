@@ -8,14 +8,14 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve frontend files
-app.use(express.static(path.join(__dirname, "public")));
+// Serve frontend static files from the "portfolio" folder
+app.use(express.static(path.join(__dirname, "portfolio")));
 
-// Enable JSON body parsing
+// Enable JSON parsing and CORS
 app.use(express.json());
 app.use(cors());
 
-// Initialize EmailJS with your public key from Render environment variables
+// Initialize EmailJS with public key
 emailjs.init({
   publicKey: process.env.EMAILJS_PUBLIC_KEY,
 });
@@ -24,30 +24,33 @@ emailjs.init({
 app.post("/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Optional: log request payload to make sure it's correct
-  console.log("Received contact form:", { name, email, message });
+  console.log("📩 Received contact form:", { name, email, message });
 
   try {
-    // Send email using EmailJS
-    await emailjs.send(
+    const templateParams = {
+      name,    // must match template variable in EmailJS
+      email,   // must match template variable in EmailJS
+      message, // must match template variable in EmailJS
+    };
+
+    console.log("📤 Sending email with template params:", templateParams);
+
+    const response = await emailjs.send(
       process.env.EMAILJS_SERVICE_ID,
       process.env.EMAILJS_TEMPLATE_ID,
-      {
-        name,   // matches template variable {{name}}
-        email,  // matches template variable {{email}}
-        message // matches template variable {{message}}
-      }
+      templateParams
     );
 
-    console.log("✅ Email sent successfully!");
+    console.log("✅ EmailJS response:", response);
+
     res.json({ success: true });
   } catch (error) {
     console.error("❌ EmailJS send error:", error);
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// SPA support: send index.html for all other routes
+// SPA support: serve index.html for all other routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "portfolio/index.html"));
 });
