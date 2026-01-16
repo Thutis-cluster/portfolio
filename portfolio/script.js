@@ -1,11 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ==========================
-  // EMAILJS CONTACT FORM
+  // INITIALIZE EMAILJS
   // ==========================
   emailjs.init("a3wBtn2bKfskDS4Sa"); // Public key only
 
   const form = document.getElementById("contact-form");
+  const popup = document.getElementById("thank-you-popup");
 
+  // Function to show popup messages
+  const showPopup = (message, success = true) => {
+    if (!popup) return;
+    popup.textContent = message;
+    popup.style.background = success ? "#00c851" : "#ff4444"; // green or red
+    popup.classList.add("show");
+
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 3000); // disappears after 3 seconds
+  };
+
+  // ==========================
+  // CONTACT FORM SUBMISSION
+  // ==========================
   if (form) {
     form.addEventListener("submit", function(e) {
       e.preventDefault();
@@ -16,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (phoneInput && phoneInput.value) {
         const phonePattern = /^[+0-9\s\-]*$/;
         if (!phonePattern.test(phoneInput.value)) {
-          alert("❌ Please enter a valid phone number.");
+          showPopup("❌ Please enter a valid phone number.", false);
           phoneInput.focus();
           return; // stop submission
         }
@@ -29,10 +45,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const TEMPLATE_ID = "template_3lwzm3g";
 
       emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
-        .then(() => { alert("✅ Message sent successfully!"); form.reset(); })
-        .catch(err => { console.error(err); alert("❌ Failed to send message."); })
-        .finally(() => { btn.textContent = "Send Message"; btn.disabled = false; });
+        .then(() => { 
+          showPopup("✅ Message sent successfully!", true);
+          form.reset(); 
+        })
+        .catch(err => { 
+          console.error("EmailJS error:", err);
+          showPopup("❌ Failed to send message.", false);
+        })
+        .finally(() => { 
+          btn.textContent = "Send Message"; 
+          btn.disabled = false; 
+        });
     });
+  } else {
+    console.error("Contact form not found in DOM!");
   }
 
   // ==========================
@@ -54,10 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll(); // trigger on load
+  revealOnScroll(); // trigger on page load
 
   // ==========================
-  // SMOOTH NAV SCROLL
+  // SMOOTH NAVIGATION SCROLL
   // ==========================
   document.querySelectorAll("nav a").forEach(link => {
     link.addEventListener("click", e => {
