@@ -1,3 +1,6 @@
+/* ==========================
+   BASE STYLES
+========================== */
 * {
   margin: 0;
   padding: 0;
@@ -61,13 +64,13 @@ nav a {
   background: #f4f6f9;
 }
 
-.projects {
+.projects, .pricing, .testimonials {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
 }
 
-.project-card {
+.project-card, .price-card, .testimonial-card {
   background: white;
   padding: 25px;
   border-radius: 12px;
@@ -75,7 +78,7 @@ nav a {
   transition: transform .3s;
 }
 
-.project-card:hover {
+.project-card:hover, .price-card:hover, .testimonial-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0,0,0,.12);
 }
@@ -100,6 +103,10 @@ input, textarea, button {
   border: none;
 }
 
+input[type="tel"] {
+  font-size: 1rem;
+}
+
 button {
   background: #243b55;
   color: white;
@@ -108,87 +115,6 @@ button {
 
 button:hover {
   opacity: 0.9;
-}
-
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: 1s;
-}
-
-.fade-in.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* WhatsApp Button */
-.whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25d366;
-  color: white;
-  font-size: 28px;
-  padding: 15px;
-  border-radius: 50%;
-  text-decoration: none;
-  box-shadow: 0 10px 20px rgba(0,0,0,.2);
-}
-
-.subtitle {
-  margin-bottom: 30px;
-  color: #555;
-}
-
-.pricing {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-}
-
-.price-card {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 15px 30px rgba(0,0,0,.08);
-  text-align: center;
-}
-
-.price-card .price {
-  font-size: 2rem;
-  margin: 15px 0;
-}
-
-.price-card ul {
-  list-style: none;
-  margin-bottom: 20px;
-}
-
-.price-card ul li {
-  margin: 8px 0;
-}
-
-.price-card.featured {
-  border: 2px solid #00c6ff;
-  transform: scale(1.05);
-}
-
-.testimonials {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
-}
-
-.testimonial-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.08);
-}
-
-.testimonial-card h4 {
-  margin-top: 15px;
-  font-weight: 600;
 }
 
 /* ==========================
@@ -205,9 +131,8 @@ button:hover {
   transform: translateY(0);
 }
 
-
 /* ==========================
-   THANK YOU POPUP
+   POPUP
 ========================== */
 .popup {
   position: fixed;
@@ -231,4 +156,129 @@ button:hover {
   transform: translateY(0);
 }
 
+/* ==========================
+   WHATSAPP BUTTON
+========================== */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25d366;
+  color: white;
+  font-size: 28px;
+  padding: 15px;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 10px 20px rgba(0,0,0,.2);
+}
 
+/* ==========================
+   PRICING AND SUBTITLES
+========================== */
+.subtitle {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.price-card .price {
+  font-size: 2rem;
+  margin: 15px 0;
+}
+
+.price-card ul {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.price-card ul li {
+  margin: 8px 0;
+}
+
+.price-card.featured {
+  border: 2px solid #00c6ff;
+  transform: scale(1.05);
+}
+
+/* ==========================
+   MOBILE OPTIMIZATIONS
+========================== */
+@media (max-width: 768px) {
+  header {
+    padding: 15px 5%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    margin-top: 10px;
+  }
+
+  nav a {
+    margin: 0 15px 5px 0;
+    display: inline-block;
+  }
+
+  .hero {
+    padding: 15%;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .btn {
+    padding: 10px 20px;
+  }
+
+  .section {
+    padding: 60px 5%;
+  }
+
+  .projects, .pricing, .testimonials {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .project-card, .price-card, .testimonial-card {
+    padding: 20px;
+  }
+
+  .skills span {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  form {
+    max-width: 100%;
+  }
+
+  input, textarea, button {
+    padding: 10px;
+  }
+
+  .popup {
+    top: 15px;
+    right: 15px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .section {
+    padding: 50px 5%;
+  }
+
+  .price-card .price {
+    font-size: 1.5rem;
+  }
+}
