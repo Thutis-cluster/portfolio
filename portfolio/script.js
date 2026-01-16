@@ -1,54 +1,61 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("contact-form");
+import express from "express";
+import cors from "cors";
+import emailjs from "@emailjs/nodejs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-    const btn = form.querySelector("button");
-    btn.textContent = "Sending...";
-    btn.disabled = true;
+// Serve frontend static files from the "portfolio" folder
+app.use(express.static(path.join(__dirname, "portfolio")));
 
-    try {
-      // Send form data to your backend
-      const res = await fetch("/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.value,
-          email: form.email.value,
-          message: form.message.value
-        })
-      });
+// Enable JSON parsing and CORS
+app.use(express.json());
+app.use(cors());
 
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        alert("✅ Message sent successfully!");
-        form.reset();
-      } else {
-        console.error("EmailJS backend error:", data);
-        alert("❌ Failed to send message. Check logs.");
-      }
-    } catch (err) {
-      console.error("Network or backend error:", err);
-      alert("❌ Failed to send message. Check console for details.");
-    } finally {
-      btn.textContent = "Send Message";
-      btn.disabled = false;
-    }
-  });
-
-  // Scroll animation
-  const sections = document.querySelectorAll(".fade-in");
-  window.addEventListener("scroll", () => {
-    sections.forEach(section => {
-      const pos = section.getBoundingClientRect().top;
-      if (pos < window.innerHeight - 100) {
-        section.classList.add("show");
-      }
-    });
-  });
-
-  // Trigger animation on page load
-  window.dispatchEvent(new Event("scroll"));
+// Initialize EmailJS with public key
+emailjs.init({
+  publicKey: process.env.EMAILJS_PUBLIC_KEY,
 });
+
+// POST endpoint for contact form
+app.post("/contact", async (req, res) => {
+  const { name, email, message } = req.body;
+
+  console.log("📩 Received contact form:", { name, email, message });
+
+  try {
+    const templateParams = {
+      name,    // must match template variable in EmailJS
+      email,   // must match template variable in EmailJS
+      message, // must match template variable in EmailJS
+    };
+
+    console.log("📤 Sending email with template params:", templateParams);
+
+    const response = await emailjs.send(
+      process.env.EMAILJS_SERVICE_ID,
+      process.env.EMAILJS_TEMPLATE_ID,
+      templateParams
+    );
+
+    console.log("✅ EmailJS response:", response);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("❌ EmailJS send error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// SPA support: serve index.html for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "portfolio/index.html"));
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
