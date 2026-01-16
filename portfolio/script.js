@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contact-form");
 
-  form.addEventListener("submit", async e => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const btn = form.querySelector("button");
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.disabled = true;
 
     try {
+      // Send form data to your backend
       const res = await fetch("/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -19,30 +20,35 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       });
 
-      if (!res.ok) throw new Error();
+      const data = await res.json();
 
-      alert("✅ Message sent successfully!");
-      form.reset();
+      if (res.ok && data.success) {
+        alert("✅ Message sent successfully!");
+        form.reset();
+      } else {
+        console.error("EmailJS backend error:", data);
+        alert("❌ Failed to send message. Check logs.");
+      }
     } catch (err) {
-      alert("❌ Failed to send message.");
-      console.error(err);
+      console.error("Network or backend error:", err);
+      alert("❌ Failed to send message. Check console for details.");
     } finally {
       btn.textContent = "Send Message";
       btn.disabled = false;
     }
   });
-});
 
-// Scroll animation
-const sections = document.querySelectorAll(".fade-in");
-
-window.addEventListener("scroll", () => {
-  sections.forEach(section => {
-    const pos = section.getBoundingClientRect().top;
-    if (pos < window.innerHeight - 100) {
-      section.classList.add("show");
-    }
+  // Scroll animation
+  const sections = document.querySelectorAll(".fade-in");
+  window.addEventListener("scroll", () => {
+    sections.forEach(section => {
+      const pos = section.getBoundingClientRect().top;
+      if (pos < window.innerHeight - 100) {
+        section.classList.add("show");
+      }
+    });
   });
-});
 
-window.dispatchEvent(new Event("scroll"));
+  // Trigger animation on page load
+  window.dispatchEvent(new Event("scroll"));
+});
