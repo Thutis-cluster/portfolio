@@ -1,50 +1,55 @@
-// Initialize EmailJS (public key only)
-emailjs.init("a3wBtn2bKfskDS4Sa");
+document.addEventListener("DOMContentLoaded", () => {
+  // ==========================
+  // EMAILJS CONTACT FORM
+  // ==========================
+  emailjs.init("a3wBtn2bKfskDS4Sa"); // public key only
 
-// Fade in all sections
-document.querySelectorAll(".fade-in").forEach(section => {
-  section.classList.add("show");
-});
+  const form = document.getElementById("contact-form");
 
-// Contact form
-const form = document.getElementById("contact-form");
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-if (form) {
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
+      const btn = form.querySelector("button");
+      btn.textContent = "Sending...";
+      btn.disabled = true;
 
-    const btn = form.querySelector("button");
-    btn.textContent = "Sending...";
-    btn.disabled = true;
+      // Debug: log form data
+      const formData = new FormData(form);
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
-    // Replace with your EmailJS IDs
-    const SERVICE_ID = "service_9a3fush";
-    const TEMPLATE_ID = "template_3lwzm3g";
+      const SERVICE_ID = "service_9a3fush";
+      const TEMPLATE_ID = "template_3lwzm3g";
 
-    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
-      .then(() => {
-        alert("✅ Message sent successfully!");
-        form.reset();
-      })
-      .catch(err => {
-        console.error("EmailJS error:", err);
-        alert("❌ Failed to send message. Check console for details.");
-      })
-      .finally(() => {
-        btn.textContent = "Send Message";
-        btn.disabled = false;
-      });
-  });
-} else {
-  console.error("Contact form not found in DOM!");
-}
+      emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
+        .then(() => {
+          alert("✅ Message sent successfully!");
+          form.reset();
+        })
+        .catch(err => {
+          console.error("EmailJS error:", err);
+          alert("❌ Failed to send message. Check console for details.");
+        })
+        .finally(() => {
+          btn.textContent = "Send Message";
+          btn.disabled = false;
+        });
+    });
+  } else {
+    console.error("Contact form not found in DOM!");
+  }
 
-  /* ==========================
-     SCROLL FADE-IN ANIMATION
-  ========================== */
-
+  // ==========================
+  // INITIAL FADE-IN ON PAGE LOAD
+  // ==========================
   const sections = document.querySelectorAll(".fade-in");
+  sections.forEach(section => section.classList.add("show"));
 
+  // ==========================
+  // SCROLL FADE-IN ANIMATION
+  // ==========================
   const revealOnScroll = () => {
     sections.forEach(section => {
       const top = section.getBoundingClientRect().top;
@@ -57,10 +62,9 @@ if (form) {
   window.addEventListener("scroll", revealOnScroll);
   revealOnScroll(); // trigger on page load
 
-  /* ==========================
-     SMOOTH NAV SCROLL
-  ========================== */
-
+  // ==========================
+  // SMOOTH NAV SCROLL
+  // ==========================
   document.querySelectorAll("nav a").forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
@@ -70,3 +74,4 @@ if (form) {
       }
     });
   });
+});
