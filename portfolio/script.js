@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     serviceId = data.serviceId;
     templateId = data.templateId;
     publicKey = data.publicKey;
-    emailjs.init(publicKey);
+    emailjs.init(a3wBtn2bKfskDS4Sa);
   } catch (err) {
     console.error("Failed to load EmailJS config:", err);
   }
