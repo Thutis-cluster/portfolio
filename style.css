@@ -230,6 +230,14 @@ button:hover {
   transform: scale(1.05);
 }
 
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
 /* ==========================
    MOBILE OPTIMIZATIONS
 ========================== */
@@ -240,13 +248,34 @@ button:hover {
     align-items: flex-start;
   }
 
-  nav {
-    margin-top: 10px;
+  .menu-btn {
+    display: block;
+  }
+
+nav {
+    position: fixed;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 30px 0;
+    transform: translateY(-120%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    z-index: 99;
+  }
+
+  nav.show {
+    transform: translateY(0);
   }
 
   nav a {
-    margin: 0 15px 5px 0;
-    display: inline-block;
+    font-size: 1.1rem;
+    margin: 0;
   }
 
   .hero {
@@ -313,3 +342,24 @@ button:hover {
     font-size: 1.5rem;
   }
 }
+
+/* ==========================
+   MOBILE POPUP CENTERING
+========================== */
+@media (max-width: 768px) {
+  .popup {
+    top: 50%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .popup.show {
+    transform: translate(-50%, -50%);
+  }
+}
+
