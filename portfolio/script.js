@@ -39,3 +39,34 @@ if (form) {
   console.error("Contact form not found in DOM!");
 }
 
+  /* ==========================
+     SCROLL FADE-IN ANIMATION
+  ========================== */
+
+  const sections = document.querySelectorAll(".fade-in");
+
+  const revealOnScroll = () => {
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      if (top < window.innerHeight - 100) {
+        section.classList.add("show");
+      }
+    });
+  };
+
+  window.addEventListener("scroll", revealOnScroll);
+  revealOnScroll(); // trigger on page load
+
+  /* ==========================
+     SMOOTH NAV SCROLL
+  ========================== */
+
+  document.querySelectorAll("nav a").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute("href"));
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
