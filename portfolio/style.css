@@ -191,3 +191,61 @@ button:hover {
   font-weight: 600;
 }
 
+/* ==========================
+   FADE-IN + STAGGERED ANIMATION
+========================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.staggered > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Alternating slide-in for children */
+.fade-in.staggered > *:nth-child(odd) {
+  transform: translateX(-50px);
+}
+.fade-in.staggered > *:nth-child(even) {
+  transform: translateX(50px);
+}
+
+/* Show state */
+.fade-in.show > * {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+/* Stagger delays for multiple children */
+.fade-in.show.staggered > *:nth-child(1) { transition-delay: 0.1s; }
+.fade-in.show.staggered > *:nth-child(2) { transition-delay: 0.2s; }
+.fade-in.show.staggered > *:nth-child(3) { transition-delay: 0.3s; }
+.fade-in.show.staggered > *:nth-child(4) { transition-delay: 0.4s; }
+.fade-in.show.staggered > *:nth-child(5) { transition-delay: 0.5s; }
+
+/* Input fields */
+input, textarea, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+input[type="tel"] {
+  font-size: 1rem;
+}
+
+button {
+  background: #243b55;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover { opacity: 0.9; }
+
+
