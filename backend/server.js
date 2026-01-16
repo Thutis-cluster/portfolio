@@ -1,21 +1,29 @@
 import express from "express";
-import cors from "cors";
+import path from "path";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-// Test route
-app.get("/", (req, res) => res.send("Server running!"));
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, "../"))); // adjust path if needed
 
-// Route to send EmailJS IDs (safe: only public key can be exposed)
+// Route to provide EmailJS config (frontend safe)
 app.get("/emailjs-config", (req, res) => {
   res.json({
-    serviceId: process.env.EMAILJS_SERVICE_ID,
-    templateId: process.env.EMAILJS_TEMPLATE_ID,
-    publicKey: process.env.EMAILJS_PUBLIC_KEY
+    publicKey: process.env.EMAILJS_PUBLIC_KEY,   // safe to expose
+    serviceId: process.env.EMAILJS_SERVICE_ID,   // optional if you want backend to manage
+    templateId: process.env.EMAILJS_TEMPLATE_ID // optional if you want backend to manage
   });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Fallback to index.html for frontend routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../index.html")); // adjust path
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
