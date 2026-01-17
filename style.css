@@ -53,6 +53,7 @@ body {
 header {
   position: fixed;
   top: 0;
+  height: 70px;
   width: 100%;
   padding: 18px 10%;
   display: flex;
@@ -274,6 +275,35 @@ body.dark .hero {
   margin: 15px 0;
 }
 
+/* ==========================
+   Animated Selected Card Border
+========================== */
+.price-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.price-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.price-card.selected::before {
+  border-color: var(--primary);
+}
+
+/* Glow animation */
+.price-card.selected {
+  box-shadow:
+    0 0 0 1px var(--primary),
+    0 20px 50px rgba(0,198,255,0.35);
+  transform: scale(1.06);
+}
+
 /* =====================================
    SKILLS
 ===================================== */
@@ -361,6 +391,21 @@ input[type="checkbox"]:checked::after {
   transform: rotate(45deg) scale(1);
 }
 
+.menu-btn {
+  margin-left: auto;
+  z-index: 1001;
+}
+
+.hero {
+  padding-top: calc(12% + 70px);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 120px;
+  }
+}
+
 /* ===== Mobile Navigation ===== */
 .menu-btn {
   display: none;
@@ -377,19 +422,19 @@ input[type="checkbox"]:checked::after {
 
   nav {
     position: fixed;
-    top: 70px;
+    top: 70px; /* below header */
     left: 0;
     width: 100%;
     background: var(--bg);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 30px 0;
+    gap: 22px;
+    padding: 25px 0;
     transform: translateY(-120%);
     transition: transform 0.35s ease;
-    z-index: 999;
+    z-index: 998;
     border-bottom: 1px solid var(--border);
   }
 
@@ -401,6 +446,36 @@ input[type="checkbox"]:checked::after {
     font-size: 1.1rem;
   }
 }
+
+/* ==========================
+   MOBILE SPACING POLISH
+========================== */
+@media (max-width: 768px) {
+  .section {
+    padding: 70px 6%;
+  }
+
+  .projects,
+  .pricing,
+  .testimonials {
+    gap: 22px;
+  }
+
+  .project-card,
+  .price-card,
+  .testimonial-card {
+    padding: 22px;
+  }
+
+  .price-card.selected {
+    transform: scale(1.03);
+  }
+
+  .skills span {
+    margin: 8px 6px;
+  }
+}
+
 
 /* =====================================
    POPUP
