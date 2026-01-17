@@ -103,7 +103,7 @@
   <div class="pricing">
 
     <div class="price-card">
-      <h3>Starter</h3>
+      <h3>Basic Website</h3>
       <p class="price">R1 900.00</p>
       <ul>
         <li>1–3 Page Website</li>
@@ -115,7 +115,7 @@
     </div>
 
     <div class="price-card featured">
-      <h3>Business</h3>
+      <h3>Business Website</h3>
       <p class="price">R3 200.00</p>
       <ul>
         <li>Up to 6 Pages</li>
@@ -124,11 +124,11 @@
         <li>WhatsApp Integration</li>
         <li>SEO Optimization</li>
       </ul>
-      <a href="#contact" class="btn">Most Popular</a>
+      <button class="btn select-price">Select</button>
     </div>
 
     <div class="price-card">
-      <h3>Premium</h3>
+      <h3>E-Commerce Website</h3>
       <p class="price">R6 200.00+</p>
       <ul>
         <li>E-Commerce or Custom System</li>
@@ -137,43 +137,34 @@
         <li>Admin Dashboard</li>
         <li>Ongoing Support</li>
       </ul>
-      <a href="#contact" class="btn">Request Quote</a>
+      <button class="btn select-price">Select</button>
     </div>
-
   </div>
+</section>
 
-    <section class="section fade-in">
+  <section class="section fade-in">
   <h2>Estimate Your Website Cost</h2>
 
   <div class="calculator">
     <label>
       Website Type
-      <select id="site-type">
-        <option value="1500">Basic Website (R1,500)</option>
-        <option value="3000">Business Website (R3,000)</option>
-        <option value="6000">E-Commerce Website (R6,000)</option>
-      </select>
+      <input type="text" id="site-type" value="Select on cards" readonly />
     </label>
 
-    <label>
-      Extra Features
-      <select id="extras">
-        <option value="0">None</option>
-        <option value="500">Booking System (+R500)</option>
-        <option value="800">Payment Integration (+R800)</option>
-        <option value="1200">Admin Dashboard (+R1,200)</option>
-      </select>
-    </label>
+    <fieldset>
+      <legend>Extra Features</legend>
+      <label><input type="checkbox" class="extra" value="600" /> Booking System (+R600)</label>
+      <label><input type="checkbox" class="extra" value="900" /> Payment Integration (+R900)</label>
+      <label><input type="checkbox" class="extra" value="1300" /> Admin Dashboard (+R1,300)</label>
+    </fieldset>
 
     <p class="total">
-      Estimated Total: <strong id="total">R1,500</strong>
+      Estimated Total: <strong id="total">R0</strong>
     </p>
 
-<button id="download-proposal" class="btn">Download Proposal (PDF)</button>
-<a href="#" id="whatsapp-btn" class="btn">Proceed to Contact</a>
+    <button id="download-proposal" class="btn">Download Proposal (PDF)</button>
+    <a href="#" id="whatsapp-btn" class="btn">Proceed to Contact</a>
   </div>
-</section>
-
 </section>
 
   <section id="testimonials" class="section dark fade-in">
