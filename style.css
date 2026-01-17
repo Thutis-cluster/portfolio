@@ -238,6 +238,61 @@ button:hover {
   cursor: pointer;
 }
 
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+/* DARK MODE */
+body.dark {
+  background: #121212;
+  color: #eee;
+}
+
+body.dark header {
+  background: #1e1e1e;
+}
+
+body.dark .section.dark {
+  background: #1a1a1a;
+}
+
+body.dark .project-card,
+body.dark .price-card,
+body.dark .testimonial-card {
+  background: #1f1f1f;
+  color: #eee;
+}
+
+/* ==========================
+   MOBILE STICKY CTA
+========================== */
+.mobile-cta {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-cta {
+    display: block;
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00c6ff;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    z-index: 9998;
+  }
+}
+
+
 /* ==========================
    MOBILE OPTIMIZATIONS
 ========================== */
