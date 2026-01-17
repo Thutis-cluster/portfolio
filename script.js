@@ -31,6 +31,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.addEventListener("scroll", revealOnScroll);
   revealOnScroll();
 
+// Pricing selection
+let selectedPrice = null;
+const priceButtons = document.querySelectorAll(".select-price");
+const totalEl = document.createElement("p");
+totalEl.style.marginTop = "15px";
+
+priceButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    // Reset previous selection
+    priceButtons.forEach(b => b.style.background = "#00c6ff");
+    btn.style.background = "#243b55";
+    selectedPrice = btn.parentElement.querySelector(".price").textContent;
+    btn.parentElement.appendChild(totalEl);
+    totalEl.textContent = `Selected Price: ${selectedPrice}`;
+  });
+});
+  
   /* ==========================
      THANK YOU POPUP
   ========================== */
