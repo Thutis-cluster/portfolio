@@ -71,8 +71,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     emailjs.sendForm(serviceId, templateId, form)
       .then(() => {
+      emailjs.send(
+      EMAIL_CONFIG.serviceId,
+      "TEMPLATE_ID_AUTOREPLY",
+       {
+       name: form.name.value,
+      email: form.email.value
+       }
+    );
+        
         form.reset();
-        showPopup("✅ Message sent successfully!", true);
+        showPopup("✅ Message sent! I’ll reply within 24 hours.", true);
       })
       .catch(err => {
         console.error("EmailJS error:", err);
@@ -96,6 +105,27 @@ if (toggle) {
     toggle.textContent =
       document.body.classList.contains("dark") ? "☀️" : "🌙";
   });
+}
+
+  /* ==========================
+   PRICING CALCULATOR (ZAR)
+========================== */
+const siteType = document.getElementById("site-type");
+const extras = document.getElementById("extras");
+const totalEl = document.getElementById("total");
+
+function updateTotal() {
+  if (!siteType || !extras || !totalEl) return;
+
+  const total =
+    parseInt(siteType.value) + parseInt(extras.value);
+
+  totalEl.textContent = `R${total.toLocaleString("en-ZA")}`;
+}
+
+if (siteType && extras) {
+  siteType.addEventListener("change", updateTotal);
+  extras.addEventListener("change", updateTotal);
 }
 
 /* ==========================
