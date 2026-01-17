@@ -1,130 +1,363 @@
-/* ==========================
-   BASE STYLES
-========================== */
+/* =====================================
+   PREMIUM DESIGN SYSTEM
+===================================== */
+:root {
+  --primary: #00c6ff;
+  --secondary: #6a11cb;
+  --accent: #22d3ee;
+  --dark-bg: #020617;
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.12);
+  --text-light: #e5e7eb;
+  --text-muted: #94a3b8;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  background: #fff;
-  color: #222;
+html {
+  scroll-behavior: smooth;
 }
 
+body {
+  background: linear-gradient(180deg, #020617, #020617);
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 header {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 20px 10%;
+  padding: 18px 10%;
   display: flex;
   justify-content: space-between;
-  background: #fff;
-  box-shadow: 0 2px 15px rgba(0,0,0,.05);
-  z-index: 100;
-  backdrop-filter: blur(10px);
+  align-items: center;
+  background: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.4px;
 }
 
 nav a {
-  margin-left: 20px;
+  margin-left: 24px;
   text-decoration: none;
-  color: #333;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
 }
 
+nav a:hover {
+  opacity: 1;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+/* =====================================
+   HERO
+===================================== */
 .hero {
-  height: 100vh;
-  padding: 10%;
-  background: linear-gradient(135deg, #141e30, #243b55);
-  color: white;
+  min-height: 100vh;
+  padding: 12% 10%;
+  background:
+    radial-gradient(circle at top right, rgba(0,198,255,0.25), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(106,17,203,0.25), transparent 40%),
+    linear-gradient(135deg, #020617, #020617);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .hero h1 {
-  font-size: 3rem;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.15;
+  max-width: 900px;
 }
 
+.hero p {
+  max-width: 650px;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  margin-top: 20px;
+}
+
+.hero .btn {
+  margin-top: 30px;
+}
+
+/* =====================================
+   BUTTONS
+===================================== */
 .btn {
-  background: #00c6ff;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
-  padding: 12px 30px;
-  border-radius: 30px;
+  padding: 14px 36px;
+  border-radius: 999px;
+  font-weight: 600;
   text-decoration: none;
   width: fit-content;
+  transition: all 0.35s ease;
+  box-shadow: 0 20px 40px rgba(0, 198, 255, 0.35);
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px rgba(0, 198, 255, 0.45);
+}
+
+/* =====================================
+   SECTIONS
+===================================== */
+.section {
+  padding: 100px 10%;
+}
+
+.section h2 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin-bottom: 15px;
+  letter-spacing: -0.5px;
+}
+
+.section p {
+  max-width: 720px;
+  color: var(--text-muted);
+}
+
+.section.dark {
+  background: #020617;
+}
+
+/* =====================================
+   CARDS (PROJECTS / PRICING / TESTIMONIALS)
+===================================== */
+.projects,
+.pricing,
+.testimonials {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.project-card,
+.price-card,
+.testimonial-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  padding: 30px;
+  border-radius: 18px;
+  transition: all 0.4s ease;
+}
+
+.project-card:hover,
+.price-card:hover,
+.testimonial-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+}
+
+.project-card h3,
+.price-card h3 {
+  margin-bottom: 10px;
+}
+
+.project-card ul,
+.price-card ul {
+  list-style: none;
   margin-top: 15px;
 }
 
-.section {
-  padding: 80px 10%;
+.project-card ul li,
+.price-card ul li {
+  margin: 8px 0;
+  color: var(--text-muted);
 }
 
-.dark {
-  background: #f4f6f9;
+/* =====================================
+   FEATURED PRICING
+===================================== */
+.price-card.featured {
+  background:
+    linear-gradient(135deg, rgba(0,198,255,0.15), rgba(106,17,203,0.15));
+  border: 2px solid var(--primary);
+  transform: scale(1.08);
 }
 
-.projects, .pricing, .testimonials {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
+.price {
+  font-size: 2rem;
+  margin: 15px 0;
 }
 
-.project-card, .price-card, .testimonial-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 15px 30px rgba(0,0,0,.08);
-  transition: transform .3s;
-}
-
-.project-card:hover, .price-card:hover, .testimonial-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,.12);
+/* =====================================
+   SKILLS
+===================================== */
+.skills {
+  margin-top: 30px;
 }
 
 .skills span {
-  background: #eee;
-  padding: 10px 18px;
-  border-radius: 25px;
-  margin: 5px;
   display: inline-block;
+  margin: 6px;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.9rem;
 }
 
+/* =====================================
+   FORMS
+===================================== */
 form {
-  max-width: 400px;
+  max-width: 420px;
+  margin-top: 30px;
 }
 
-input, textarea, button {
+input,
+textarea,
+button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 5px;
-  border: none;
+  padding: 14px;
+  margin-top: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-light);
 }
 
-input[type="tel"] {
-  font-size: 1rem;
+textarea {
+  resize: none;
 }
 
 button {
-  background: #243b55;
-  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  font-weight: 600;
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.9;
+/* =====================================
+   CALCULATOR
+===================================== */
+.calculator {
+  max-width: 420px;
+  margin-top: 30px;
 }
 
-/* ==========================
-   FADE-IN ON SCROLL
-========================== */
+.calculator fieldset {
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.calculator label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.total {
+  margin: 20px 0;
+  font-size: 1.2rem;
+}
+
+/* =====================================
+   POPUP
+===================================== */
+.popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 16px 28px;
+  background: #16a34a;
+  color: white;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+  z-index: 9999;
+}
+
+.popup.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =====================================
+   FLOATING BUTTONS
+===================================== */
+.whatsapp-btn,
+#scrollTopBtn {
+  position: fixed;
+  right: 20px;
+  border-radius: 50%;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+}
+
+.whatsapp-btn {
+  bottom: 20px;
+  background: #25d366;
+  font-size: 28px;
+  padding: 15px;
+  color: white;
+}
+
+#scrollTopBtn {
+  bottom: 90px;
+  background: var(--primary);
+  padding: 14px 18px;
+  color: white;
+  border: none;
+  font-size: 20px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#scrollTopBtn.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+  text-align: center;
+  padding: 30px 10%;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+/* =====================================
+   FADE-IN
+===================================== */
 .fade-in {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition: all 0.8s ease;
 }
 
 .fade-in.show {
@@ -132,232 +365,16 @@ button:hover {
   transform: translateY(0);
 }
 
-/* ==========================
-   POPUP
-========================== */
-.popup {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #00c851;
-  color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  z-index: 999;
-}
-
-.popup.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-/* ==========================
-   WHATSAPP BUTTON
-========================== */
-.whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25d366;
-  color: white;
-  font-size: 28px;
-  padding: 15px;
-  border-radius: 50%;
-  text-decoration: none;
-  box-shadow: 0 10px 20px rgba(0,0,0,.2);
-}
-
-/* ==========================
-   SCROLL TO TOP BUTTON
-========================== */
-#scrollTopBtn {
-  position: fixed;
-  bottom: 80px; /* above WhatsApp button */
-  right: 20px;
-  z-index: 999;
-  background: #00c6ff;
-  color: white;
-  border: none;
-  padding: 12px 16px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,.2);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-#scrollTopBtn.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-#scrollTopBtn:hover {
-  background: #0099cc;
-}
-
-/* ==========================
-   PRICING AND SUBTITLES
-========================== */
-.subtitle {
-  margin-bottom: 30px;
-  color: #555;
-}
-
-.price-card .price {
-  font-size: 2rem;
-  margin: 15px 0;
-}
-
-.price-card ul {
-  list-style: none;
-  margin-bottom: 20px;
-}
-
-.price-card ul li {
-  margin: 8px 0;
-}
-
-.price-card.featured {
-  border: 2px solid #00c6ff;
-  transform: scale(1.05);
-}
-
-.menu-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-}
-
-.theme-toggle {
-  position: absolute;
-  background: none;
-  border: none;
-  font-size: 1.3rem;
-  cursor: pointer;
-  margin-left: 15px;
-}
-
-/* DARK MODE */
-body.dark {
-  background: #121212;
-  color: #eee;
-}
-
-body.dark header {
-  background: #1e1e1e;
-}
-
-body.dark .section.dark {
-  background: #1a1a1a;
-}
-
-body.dark .project-card,
-body.dark .price-card,
-body.dark .testimonial-card {
-  background: #1f1f1f;
-  color: #eee;
-}
-
-.calculator {
-  max-width: 400px;
-  margin-top: 20px;
-}
-
-.calculator label {
-  display: block;
-  margin-bottom: 15px;
-}
-
-.calculator select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-}
-
-.calculator .total {
-  margin: 20px 0;
-  font-size: 1.2rem;
-}
-
-/* ==========================
-   MOBILE STICKY CTA
-========================== */
-.mobile-cta {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .mobile-cta {
-    display: block;
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #00c6ff;
-    color: white;
-    padding: 14px 30px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    z-index: 9998;
-  }
-}
-
-
-/* ==========================
-   MOBILE OPTIMIZATIONS
-========================== */
+/* =====================================
+   MOBILE
+===================================== */
 @media (max-width: 768px) {
   header {
-    padding: 15px 5%;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .menu-btn {
-    display: block;
-  }
-
-nav {
-    position: fixed;
-    top: 70px;
-    right: 0;
-    width: 100%;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 30px 0;
-    transform: translateY(-120%);
-    transition: transform 0.3s ease;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    z-index: 99;
-  }
-
-  nav.show {
-    transform: translateY(0);
-  }
-
-  nav a {
-    font-size: 1.1rem;
-    margin: 0;
+    padding: 15px 6%;
   }
 
   .hero {
-    padding: 15%;
+    padding: 25% 6%;
     text-align: center;
   }
 
@@ -366,78 +383,10 @@ nav {
   }
 
   .btn {
-    padding: 10px 20px;
+    margin: 25px auto 0;
   }
 
   .section {
-    padding: 60px 5%;
-  }
-
-  .projects, .pricing, .testimonials {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .project-card, .price-card, .testimonial-card {
-    padding: 20px;
-  }
-
-  .skills span {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-  }
-
-  form {
-    max-width: 100%;
-  }
-
-  input, textarea, button {
-    padding: 10px;
-  }
-
-  .popup {
-    top: 15px;
-    right: 15px;
-    padding: 12px 20px;
-    font-size: 0.9rem;
+    padding: 80px 6%;
   }
 }
-
-@media (max-width: 480px) {
-  .hero h1 {
-    font-size: 1.6rem;
-  }
-
-  .btn {
-    width: 100%;
-  }
-
-  .section {
-    padding: 50px 5%;
-  }
-
-  .price-card .price {
-    font-size: 1.5rem;
-  }
-}
-
-/* ==========================
-   MOBILE POPUP CENTERING
-========================== */
-@media (max-width: 768px) {
-  .popup {
-    top: 50%;
-    left: 50%;
-    right: auto;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 320px;
-    text-align: center;
-    font-size: 0.95rem;
-  }
-
-  .popup.show {
-    transform: translate(-50%, -50%);
-  }
-}
-
