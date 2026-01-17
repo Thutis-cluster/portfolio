@@ -473,7 +473,7 @@ input[type="checkbox"]:checked::after {
 ========================== */
 @media (max-width: 768px) {
   .section {
-    padding: 40px 6%;
+    padding: 30px 6%;
   }
 
   .projects,
@@ -611,7 +611,7 @@ footer {
   }
 
   .hero {
-    margin-top: 60px;
+    margin-top: 80px;
     padding: 25% 6%;
     text-align: center;
   }
