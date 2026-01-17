@@ -397,6 +397,27 @@ input[type="checkbox"]:checked::after {
 }
 
 /* ==========================
+   RECOMMENDED EXTRA
+========================== */
+.calculator fieldset label.recommended {
+  border: 2px dashed var(--primary);
+  background: rgba(0,198,255,0.08);
+  position: relative;
+}
+
+.calculator fieldset label.recommended::after {
+  content: "Recommended";
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+/* ==========================
    CALCULATOR ACTION BUTTONS
 ========================== */
 .calculator-actions {
