@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
         
         form.reset();
-        showPopup("✅ Message sent! I’ll reply within 24 hours.", true);
+        showPopup("✅ Message sent! We’ll reply within 24 hours.", true);
       })
       .catch(err => {
         console.error("EmailJS error:", err);
@@ -104,6 +104,31 @@ if (toggle) {
 
     toggle.textContent =
       document.body.classList.contains("dark") ? "☀️" : "🌙";
+  });
+}
+
+  /* =================================
+  PDF INTERGATION
+========================================== */
+  const { jsPDF } = window.jspdf;
+const proposalBtn = document.getElementById("download-proposal");
+
+if (proposalBtn) {
+  proposalBtn.addEventListener("click", () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Website Proposal", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Name: ${form.name.value}`, 20, 40);
+    doc.text(`Email: ${form.email.value}`, 20, 50);
+    doc.text(`Phone: ${form.phone ? form.phone.value : "N/A"}`, 20, 60);
+    doc.text(`Website Type: ${siteType.options[siteType.selectedIndex].text}`, 20, 70);
+    doc.text(`Extras: ${extras.options[extras.selectedIndex].text}`, 20, 80);
+    doc.text(`Estimated Budget: ${totalEl.textContent}`, 20, 90);
+    doc.text("Thank you for considering our services!", 20, 110);
+
+    doc.save(`Proposal_${form.name.value}.pdf`);
   });
 }
 
