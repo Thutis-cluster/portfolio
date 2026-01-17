@@ -110,25 +110,23 @@ if (toggle) {
   /* =================================
   PDF INTERGATION
 ========================================== */
-  const { jsPDF } = window.jspdf;
+const { jsPDF } = window.jspdf;
 const proposalBtn = document.getElementById("download-proposal");
 
 if (proposalBtn) {
   proposalBtn.addEventListener("click", () => {
-    const doc = new jsPDF();
+    if (!selectedPrice) return alert("Please select a package first!");
 
+    const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text("Website Proposal", 20, 20);
     doc.setFontSize(12);
-    doc.text(`Name: ${form.name.value}`, 20, 40);
-    doc.text(`Email: ${form.email.value}`, 20, 50);
-    doc.text(`Phone: ${form.phone ? form.phone.value : "N/A"}`, 20, 60);
-    doc.text(`Website Type: ${siteType.options[siteType.selectedIndex].text}`, 20, 70);
-    doc.text(`Extras: ${extras.options[extras.selectedIndex].text}`, 20, 80);
-    doc.text(`Estimated Budget: ${totalEl.textContent}`, 20, 90);
-    doc.text("Thank you for considering our services!", 20, 110);
-
-    doc.save(`Proposal_${form.name.value}.pdf`);
+    doc.text(`Name: ${form.name.value || "N/A"}`, 20, 40);
+    doc.text(`Email: ${form.email.value || "N/A"}`, 20, 50);
+    doc.text(`Phone: ${form.phone.value || "N/A"}`, 20, 60);
+    doc.text(`Selected Package: ${selectedPrice}`, 20, 70);
+    doc.text("Thank you for considering my services!", 20, 90);
+    doc.save(`Proposal_${form.name.value || "Client"}.pdf`);
   });
 }
 
