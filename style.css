@@ -269,6 +269,27 @@ body.dark .testimonial-card {
   color: #eee;
 }
 
+.calculator {
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.calculator label {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.calculator select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.calculator .total {
+  margin: 20px 0;
+  font-size: 1.2rem;
+}
+
 /* ==========================
    MOBILE STICKY CTA
 ========================== */
