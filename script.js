@@ -78,4 +78,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
   });
 
+/* ==========================
+   MOBILE NAV TOGGLE
+========================== */
+const menuBtn = document.getElementById("menu-btn");
+const nav = document.getElementById("nav");
+
+if (menuBtn && nav) {
+  menuBtn.addEventListener("click", () => {
+    nav.classList.toggle("show");
+  });
+
+  // Close menu when link is clicked
+  nav.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("show");
+    });
+  });
+} 
 });
