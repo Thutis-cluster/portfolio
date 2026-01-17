@@ -367,6 +367,35 @@ input[type="checkbox"]:checked::after {
   z-index: 1001;
 }
 
+/* ==========================
+   CHECKBOX LIST LAYOUT
+========================== */
+.calculator fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.calculator fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: var(--card);
+}
+
+.calculator fieldset label:hover {
+  background: var(--bg-soft);
+}
+
+.calculator fieldset input[type="checkbox"] {
+  flex-shrink: 0;
+}
+
 .hero {
   padding-top: calc(12% + 70px);
 }
@@ -423,7 +452,7 @@ input[type="checkbox"]:checked::after {
 ========================== */
 @media (max-width: 768px) {
   .section {
-    padding: 70px 6%;
+    padding: 40px 6%;
   }
 
   .projects,
@@ -447,6 +476,30 @@ input[type="checkbox"]:checked::after {
   }
 }
 
+/* ==========================
+   MOBILE STICKY CTA
+========================== */
+.mobile-cta {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-cta {
+    display: block;
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00c6ff;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    z-index: 9998;
+  }
+}
 
 /* =====================================
    POPUP
@@ -537,6 +590,7 @@ footer {
   }
 
   .hero {
+    margin-top: 60px;
     padding: 25% 6%;
     text-align: center;
   }
