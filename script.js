@@ -57,6 +57,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", e => {
     e.preventDefault();
 
+  // Honeypot check
+  if (form.company && form.company.value !== "") {
+    console.warn("Spam blocked");
+    return;
+  }
+    
     const btn = form.querySelector("button");
     btn.textContent = "Sending...";
     btn.disabled = true;
