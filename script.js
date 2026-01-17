@@ -107,49 +107,79 @@ if (toggle) {
   });
 }
 
-  /* =================================
-  PDF INTERGATION
-========================================== */
-const { jsPDF } = window.jspdf;
-const proposalBtn = document.getElementById("download-proposal");
+  /* ==========================
+     PRICING CALCULATOR
+  ========================== */
+  const priceCards = document.querySelectorAll(".price-card");
+  const siteTypeInput = document.getElementById("site-type");
+  const extrasCheckboxes = document.querySelectorAll(".extra");
+  const totalEl = document.getElementById("total");
 
-if (proposalBtn) {
-  proposalBtn.addEventListener("click", () => {
-    if (!selectedPrice) return alert("Please select a package first!");
+  let selectedPrice = 0;
 
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("Website Proposal", 20, 20);
-    doc.setFontSize(12);
-    doc.text(`Name: ${form.name.value || "N/A"}`, 20, 40);
-    doc.text(`Email: ${form.email.value || "N/A"}`, 20, 50);
-    doc.text(`Phone: ${form.phone.value || "N/A"}`, 20, 60);
-    doc.text(`Selected Package: ${selectedPrice}`, 20, 70);
-    doc.text("Thank you for considering my services!", 20, 90);
-    doc.save(`Proposal_${form.name.value || "Client"}.pdf`);
+  function updateTotal() {
+    let extrasTotal = 0;
+    extrasCheckboxes.forEach(cb => {
+      if (cb.checked) extrasTotal += parseInt(cb.value);
+    });
+    const total = selectedPrice + extrasTotal;
+    totalEl.textContent = `R${total.toLocaleString("en-ZA")}`;
+  }
+
+  // Price card selection
+  priceCards.forEach(card => {
+    const btn = card.querySelector(".select-price");
+    btn.addEventListener("click", () => {
+      // Remove previous selection highlight
+      priceCards.forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+
+      // Update input and numeric price
+      const priceText = card.querySelector(".price").textContent;
+      selectedPrice = parseInt(priceText.replace(/[^0-9]/g, ""));
+      siteTypeInput.value = `${card.querySelector("h3").textContent} (${priceText})`;
+
+      updateTotal();
+    });
   });
-}
+
+  // Extras checkbox
+  extrasCheckboxes.forEach(cb => cb.addEventListener("change", updateTotal));
+
+  // Initialize
+  siteTypeInput.value = "Select on cards";
+  updateTotal();
 
   /* ==========================
-   PRICING CALCULATOR (ZAR)
-========================== */
-const siteType = document.getElementById("site-type");
-const extras = document.getElementById("extras");
-const totalEl = document.getElementById("total");
+     PDF DOWNLOAD
+  ========================== */
+  const { jsPDF } = window.jspdf;
+  const proposalBtn = document.getElementById("download-proposal");
 
-function updateTotal() {
-  if (!siteType || !extras || !totalEl) return;
+  if (proposalBtn) {
+    proposalBtn.addEventListener("click", () => {
+      if (!selectedPrice) return alert("Please select a package first!");
 
-  const total =
-    parseInt(siteType.value) + parseInt(extras.value);
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("Website Proposal", 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Name: ${form.name.value || "N/A"}`, 20, 40);
+      doc.text(`Email: ${form.email.value || "N/A"}`, 20, 50);
+      doc.text(`Phone: ${form.phone.value || "N/A"}`, 20, 60);
+      doc.text(`Selected Package: ${siteTypeInput.value}`, 20, 70);
 
-  totalEl.textContent = `R${total.toLocaleString("en-ZA")}`;
-}
+      // Add selected extras
+      const selectedExtras = Array.from(extrasCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.parentElement.textContent.trim());
+      doc.text(`Extras: ${selectedExtras.join(", ") || "None"}`, 20, 80);
 
-if (siteType && extras) {
-  siteType.addEventListener("change", updateTotal);
-  extras.addEventListener("change", updateTotal);
-}
+      doc.text(`Total: ${totalEl.textContent}`, 20, 90);
+      doc.text("Thank you for considering my services!", 20, 110);
+      doc.save(`Proposal_${form.name.value || "Client"}.pdf`);
+    });
+  }
 
 /* ==========================
    MOBILE NAV TOGGLE
@@ -169,21 +199,4 @@ if (menuBtn && nav) {
     });
   });
 } 
-});
-
-// Pricing selection
-let selectedPrice = null;
-const priceButtons = document.querySelectorAll(".select-price");
-const totalEl = document.createElement("p");
-totalEl.style.marginTop = "15px";
-
-priceButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    // Reset previous selection
-    priceButtons.forEach(b => b.style.background = "#00c6ff");
-    btn.style.background = "#243b55";
-    selectedPrice = btn.parentElement.querySelector(".price").textContent;
-    btn.parentElement.appendChild(totalEl);
-    totalEl.textContent = `Selected Price: ${selectedPrice}`;
-  });
 });
