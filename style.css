@@ -396,6 +396,27 @@ input[type="checkbox"]:checked::after {
   flex-shrink: 0;
 }
 
+/* ==========================
+   CALCULATOR ACTION BUTTONS
+========================== */
+.calculator-actions {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.calculator-actions .btn {
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+}
+
+.calculator-actions .btn::after {
+  content: " →";
+}
+
 .hero {
   padding-top: calc(12% + 70px);
 }
