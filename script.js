@@ -170,9 +170,14 @@ priceCards.forEach(card => {
 
     const title = card.querySelector("h3").textContent.toLowerCase();
 
+    // Only recommend extras for Basic Website
+    if (title.includes("basic")) {
+      extraLabels[0]?.classList.add("recommended"); // Booking
+      extraLabels[1]?.classList.add("recommended"); // Payment
+    }
+    
     // Business Website → Booking + WhatsApp
     if (title.includes("business")) {
-      extraLabels[0]?.classList.add("recommended"); // Booking
       extraLabels[1]?.classList.add("recommended"); // Payment
     }
 
