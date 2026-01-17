@@ -54,44 +54,47 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!form) return;
 
-  form.addEventListener("submit", e => {
-    e.preventDefault();
+form.addEventListener("submit", e => {
+  e.preventDefault();
 
   // Honeypot check
   if (form.company && form.company.value !== "") {
     console.warn("Spam blocked");
     return;
   }
-    
-    const btn = form.querySelector("button");
-    btn.textContent = "Sending...";
-    btn.disabled = true;
 
-    const { serviceId, templateId } = window.EMAIL_CONFIG;
+  const btn = form.querySelector("button");
+  btn.textContent = "Sending...";
+  btn.disabled = true;
 
-    emailjs.sendForm(serviceId, templateId, form)
-      .then(() => {
+  /* 🔹 ADD THIS LINE HERE */
+  document.getElementById("estimated_total").value = totalEl.textContent;
+
+  const { serviceId, templateId } = window.EMAIL_CONFIG;
+
+  emailjs.sendForm(serviceId, templateId, form)
+    .then(() => {
       emailjs.send(
-      EMAIL_CONFIG.serviceId,
-      "TEMPLATE_ID_AUTOREPLY",
-       {
-       name: form.name.value,
-      email: form.email.value
-       }
-    );
-        
-        form.reset();
-        showPopup("✅ Message sent! We’ll reply within 24 hours.", true);
-      })
-      .catch(err => {
-        console.error("EmailJS error:", err);
-        showPopup("❌ Failed to send message.", false);
-      })
-      .finally(() => {
-        btn.textContent = "Send Message";
-        btn.disabled = false;
-      });
-  });
+        EMAIL_CONFIG.serviceId,
+        "TEMPLATE_ID_AUTOREPLY",
+        {
+          name: form.name.value,
+          email: form.email.value
+        }
+      );
+
+      form.reset();
+      showPopup("✅ Message sent! We’ll reply within 24 hours.", true);
+    })
+    .catch(err => {
+      console.error("EmailJS error:", err);
+      showPopup("❌ Failed to send message.", false);
+    })
+    .finally(() => {
+      btn.textContent = "Send Message";
+      btn.disabled = false;
+    });
+});
 
   /* ==========================
    DARK MODE TOGGLE
@@ -151,35 +154,77 @@ if (toggle) {
   updateTotal();
 
   /* ==========================
-     PDF DOWNLOAD
-  ========================== */
-  const { jsPDF } = window.jspdf;
-  const proposalBtn = document.getElementById("download-proposal");
+   RECOMMENDED EXTRAS LOGIC
+========================== */
+const extraLabels = document.querySelectorAll(".calculator fieldset label");
 
-  if (proposalBtn) {
-    proposalBtn.addEventListener("click", () => {
-      if (!selectedPrice) return alert("Please select a package first!");
+function clearRecommendations() {
+  extraLabels.forEach(label => label.classList.remove("recommended"));
+}
 
-      const doc = new jsPDF();
-      doc.setFontSize(16);
-      doc.text("Website Proposal", 20, 20);
-      doc.setFontSize(12);
-      doc.text(`Name: ${form.name.value || "N/A"}`, 20, 40);
-      doc.text(`Email: ${form.email.value || "N/A"}`, 20, 50);
-      doc.text(`Phone: ${form.phone.value || "N/A"}`, 20, 60);
-      doc.text(`Selected Package: ${siteTypeInput.value}`, 20, 70);
+priceCards.forEach(card => {
+  const btn = card.querySelector(".select-price");
 
-      // Add selected extras
-      const selectedExtras = Array.from(extrasCheckboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.parentElement.textContent.trim());
-      doc.text(`Extras: ${selectedExtras.join(", ") || "None"}`, 20, 80);
+  btn.addEventListener("click", () => {
+    clearRecommendations();
 
-      doc.text(`Total: ${totalEl.textContent}`, 20, 90);
-      doc.text("Thank you for considering my services!", 20, 110);
-      doc.save(`Proposal_${form.name.value || "Client"}.pdf`);
-    });
+    const title = card.querySelector("h3").textContent.toLowerCase();
+
+    // Business Website → Booking + WhatsApp
+    if (title.includes("business")) {
+      extraLabels[0]?.classList.add("recommended"); // Booking
+      extraLabels[1]?.classList.add("recommended"); // Payment
+    }
+
+    // E-commerce → Payment + Admin
+    if (title.includes("commerce")) {
+      extraLabels[1]?.classList.add("recommended"); // Payment
+      extraLabels[2]?.classList.add("recommended"); // Admin
+    }
+  });
+});
+
+ /* ==========================
+   PDF DOWNLOAD (IMPROVED)
+========================== */
+proposalBtn.addEventListener("click", () => {
+  if (!selectedPrice) {
+    alert("Please select a package first!");
+    return;
   }
+
+  const name = form.name.value || "N/A";
+  const email = form.email.value || "N/A";
+  const phone = form.phone.value || "N/A";
+
+  const doc = new jsPDF();
+  doc.setFontSize(18);
+  doc.text("Website Project Proposal", 20, 20);
+
+  doc.setFontSize(12);
+  doc.text(`Client Name: ${name}`, 20, 40);
+  doc.text(`Email: ${email}`, 20, 50);
+  doc.text(`Phone: ${phone}`, 20, 60);
+
+  doc.text(`Selected Package:`, 20, 80);
+  doc.text(siteTypeInput.value, 20, 90);
+
+  const selectedExtras = Array.from(extrasCheckboxes)
+    .filter(cb => cb.checked)
+    .map(cb => cb.parentElement.textContent.trim());
+
+  doc.text(`Extras: ${selectedExtras.join(", ") || "None"}`, 20, 105);
+  doc.text(`Estimated Total: ${totalEl.textContent}`, 20, 120);
+
+  doc.text(
+    "Thank you for choosing Kamogelo Ronald Kwetsane.\nI will contact you shortly to discuss next steps.",
+    20,
+    145
+  );
+
+  doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
+});
+
 
 /* ==========================
    SKILL MODAL LOGIC
