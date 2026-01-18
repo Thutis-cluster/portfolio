@@ -285,24 +285,27 @@ const skillInfo = {
 const modal = document.getElementById("skill-modal");
 const modalTitle = document.getElementById("modal-title");
 const modalDesc = document.getElementById("modal-description");
-const modalClose = document.querySelector(".modal-close");
+const modalClose = modal?.querySelector(".modal-close"); // optional chaining in case missing
 
-document.querySelectorAll(".skills span").forEach(skill => {
-  skill.addEventListener("click", () => {
-    const key = skill.dataset.skill;
-    modalTitle.textContent = skillInfo[key].title;
-    modalDesc.textContent = skillInfo[key].description;
-    modal.classList.add("show");
+if (modal && modalTitle && modalDesc && modalClose) {
+  document.querySelectorAll(".skills span").forEach(skill => {
+    skill.addEventListener("click", () => {
+      const key = skill.dataset.skill;
+      if (!key || !skillInfo[key]) return; // safety check
+      modalTitle.textContent = skillInfo[key].title;
+      modalDesc.textContent = skillInfo[key].description;
+      modal.classList.add("show");
+    });
   });
-});
 
-modalClose.addEventListener("click", () => {
-  modal.classList.remove("show");
-});
+  modalClose.addEventListener("click", () => {
+    modal.classList.remove("show");
+  });
 
-modal.addEventListener("click", e => {
-  if (e.target === modal) modal.classList.remove("show");
-});
+  modal.addEventListener("click", e => {
+    if (e.target === modal) modal.classList.remove("show");
+  });
+}
   
 /* ==========================
    MOBILE NAV TOGGLE
