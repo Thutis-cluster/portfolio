@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async () => { 
 
   /* ==========================
      EMAILJS INIT (FROM BACKEND)
@@ -52,63 +52,62 @@ document.addEventListener("DOMContentLoaded", async () => {
   ========================== */
   const form = document.getElementById("contact-form");
 
-  if (!form) return;
+  if (form) {
+    form.addEventListener("submit", e => {
+      e.preventDefault();
 
-form.addEventListener("submit", e => {
-  e.preventDefault();
+      // Honeypot check
+      if (form.company && form.company.value !== "") {
+        console.warn("Spam blocked");
+        return;
+      }
 
-  // Honeypot check
-  if (form.company && form.company.value !== "") {
-    console.warn("Spam blocked");
-    return;
-  }
+      const btn = form.querySelector("button[type='submit']");
+      btn.textContent = "Sending...";
+      btn.disabled = true;
 
-  const btn = form.querySelector("button");
-  btn.textContent = "Sending...";
-  btn.disabled = true;
+      // Store estimate in hidden field
+      document.getElementById("estimated_total").value = totalEl.textContent;
 
-  /* 🔹 ADD THIS LINE HERE */
-  document.getElementById("estimated_total").value = totalEl.textContent;
+      const { serviceId, templateId } = window.EMAIL_CONFIG;
 
-  const { serviceId, templateId } = window.EMAIL_CONFIG;
+      emailjs.sendForm(serviceId, templateId, form)
+        .then(() => {
+          // Optional auto-reply
+          emailjs.send(
+            EMAIL_CONFIG.serviceId,
+            "TEMPLATE_ID_AUTOREPLY",
+            {
+              name: form.name.value,
+              email: form.email.value
+            }
+          );
 
-  emailjs.sendForm(serviceId, templateId, form)
-    .then(() => {
-      emailjs.send(
-        EMAIL_CONFIG.serviceId,
-        "TEMPLATE_ID_AUTOREPLY",
-        {
-          name: form.name.value,
-          email: form.email.value
-        }
-      );
-
-      form.reset();
-      showPopup("✅ Message sent! We’ll reply within 24 hours.", true);
-    })
-    .catch(err => {
-      console.error("EmailJS error:", err);
-      showPopup("❌ Failed to send message.", false);
-    })
-    .finally(() => {
-      btn.textContent = "Send Message";
-      btn.disabled = false;
+          form.reset();
+          showPopup("✅ Message sent! We’ll reply within 24 hours.", true);
+        })
+        .catch(err => {
+          console.error("EmailJS error:", err);
+          showPopup("❌ Failed to send message.", false);
+        })
+        .finally(() => {
+          btn.textContent = "Send Message";
+          btn.disabled = false;
+        });
     });
-});
+  }
 
   /* ==========================
    DARK MODE TOGGLE
-========================== */
-const toggle = document.getElementById("theme-toggle");
+  ========================== */
+  const toggle = document.getElementById("theme-toggle");
 
-if (toggle) {
-  toggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-
-    toggle.textContent =
-      document.body.classList.contains("dark") ? "☀️" : "🌙";
-  });
-}
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      toggle.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+    });
+  }
 
   /* ==========================
      PRICING CALCULATOR
@@ -155,178 +154,156 @@ if (toggle) {
 
   /* ==========================
    RECOMMENDED EXTRAS LOGIC
-========================== */
-const extraLabels = document.querySelectorAll(".calculator fieldset label");
+  ==========================
+  */
+  const extraLabels = document.querySelectorAll(".calculator fieldset label");
 
-function clearRecommendations() {
-  extraLabels.forEach(label => label.classList.remove("recommended"));
-}
-
-priceCards.forEach(card => {
-  const btn = card.querySelector(".select-price");
-
-  btn.addEventListener("click", () => {
-    clearRecommendations();
-
-    const title = card.querySelector("h3").textContent.toLowerCase();
-
-    // Only recommend extras for Basic Website
-    if (title.includes("basic")) {
-      extraLabels[0]?.classList.add("recommended"); // App
-      extraLabels[1]?.classList.add("recommended"); // Booking
-      extraLabels[2]?.classList.add("recommended"); // Payment
-      extraLabels[3]?.classList.add("recommended"); // Admin Dashboard
-    }
-    
-    // Business Website → Booking + WhatsApp
-    if (title.includes("business")) {
-      extraLabels[0]?.classList.add("recommended"); // App
-      extraLabels[2]?.classList.add("recommended"); // Payment
-      extraLabels[3]?.classList.add("recommended"); // Admin Dashboard
-    }
-
-    // E-commerce → Payment + Admin
-    if (title.includes("commerce")) {
-      extraLabels[0]?.classList.add("recommended"); // App
-      extraLabels[1]?.classList.add("recommended"); // Booking
-    }
-  });
-});
-
- /* ==========================
-   PDF DOWNLOAD (IMPROVED)
-========================== */
-proposalBtn.addEventListener("click", () => {
-  if (!selectedPrice) {
-    alert("Please select a package first!");
-    return;
+  function clearRecommendations() {
+    extraLabels.forEach(label => label.classList.remove("recommended"));
   }
 
-  const name = form.name.value || "N/A";
-  const email = form.email.value || "N/A";
-  const phone = form.phone.value || "N/A";
+  priceCards.forEach(card => {
+    const btn = card.querySelector(".select-price");
 
-  const doc = new jsPDF();
-  doc.setFontSize(18);
-  doc.text("Website Project Proposal", 20, 20);
+    btn.addEventListener("click", () => {
+      clearRecommendations();
 
-  doc.setFontSize(12);
-  doc.text(`Client Name: ${name}`, 20, 40);
-  doc.text(`Email: ${email}`, 20, 50);
-  doc.text(`Phone: ${phone}`, 20, 60);
+      const title = card.querySelector("h3").textContent.toLowerCase();
 
-  doc.text(`Selected Package:`, 20, 80);
-  doc.text(siteTypeInput.value, 20, 90);
+      // Only recommend extras for Basic Website
+      if (title.includes("basic")) {
+        extraLabels[0]?.classList.add("recommended"); // App
+        extraLabels[1]?.classList.add("recommended"); // Booking
+        extraLabels[2]?.classList.add("recommended"); // Payment
+        extraLabels[3]?.classList.add("recommended"); // Admin Dashboard
+      }
+      
+      // Business Website → Booking + WhatsApp
+      if (title.includes("business")) {
+        extraLabels[0]?.classList.add("recommended"); // App
+        extraLabels[2]?.classList.add("recommended"); // Payment
+        extraLabels[3]?.classList.add("recommended"); // Admin Dashboard
+      }
 
-  const selectedExtras = Array.from(extrasCheckboxes)
-    .filter(cb => cb.checked)
-    .map(cb => cb.parentElement.textContent.trim());
-
-  doc.text(`Extras: ${selectedExtras.join(", ") || "None"}`, 20, 105);
-  doc.text(`Estimated Total: ${totalEl.textContent}`, 20, 120);
-
-  doc.text(
-    "Thank you for choosing Kamogelo Ronald Kwetsane.\nI will contact you shortly to discuss next steps.",
-    20,
-    145
-  );
-
-  doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
-});
-
-
-/* ==========================
-   SKILL MODAL LOGIC
-========================== */
-const skillInfo = {
-  html: {
-    title: "HTML",
-    description:
-      "HTML is the foundation of every website. It structures content such as text, images, forms, and buttons so browsers can display them correctly."
-  },
-  css: {
-    title: "CSS",
-    description:
-      "CSS controls the design and layout of a website, including colors, spacing, responsiveness, and animations to create a professional look."
-  },
-  js: {
-    title: "JavaScript",
-    description:
-      "JavaScript adds interactivity and logic to websites, enabling features like calculators, forms, animations, and dynamic content."
-  },
-  firebase: {
-    title: "Firebase",
-    description:
-      "Firebase provides real-time databases, authentication, and hosting, allowing fast and scalable web and mobile applications."
-  },
-  mongodb: {
-    title: "MongoDB",
-    description:
-      "MongoDB is a NoSQL database used to store and manage large amounts of application data efficiently."
-  },
-  mongoose: {
-    title: "Mongoose",
-    description:
-      "Mongoose helps structure and manage MongoDB data by enforcing schemas and simplifying database interactions."
-  },
-  paystack: {
-    title: "Paystack",
-    description:
-      "Paystack enables secure online payments, allowing businesses to accept cards, bank transfers, and mobile payments."
-  },
-  twilio: {
-    title: "Twilio",
-    description:
-      "Twilio powers SMS and WhatsApp notifications, enabling automated reminders and customer communication."
-  },
-  render: {
-    title: "Render",
-    description:
-      "Render is a cloud platform used to deploy and host web applications securely with automatic scaling."
-  }
-};
-
-const modal = document.getElementById("skill-modal");
-const modalTitle = document.getElementById("modal-title");
-const modalDesc = document.getElementById("modal-description");
-const modalClose = modal?.querySelector(".modal-close"); // optional chaining in case missing
-
-if (modal && modalTitle && modalDesc && modalClose) {
-  document.querySelectorAll(".skills span").forEach(skill => {
-    skill.addEventListener("click", () => {
-      const key = skill.dataset.skill;
-      if (!key || !skillInfo[key]) return; // safety check
-      modalTitle.textContent = skillInfo[key].title;
-      modalDesc.textContent = skillInfo[key].description;
-      modal.classList.add("show");
+      // E-commerce → Payment + Admin
+      if (title.includes("commerce")) {
+        extraLabels[0]?.classList.add("recommended"); // App
+        extraLabels[1]?.classList.add("recommended"); // Booking
+      }
     });
   });
 
-  modalClose.addEventListener("click", () => {
-    modal.classList.remove("show");
+  /* ==========================
+     PROCEED TO CONTACT BUTTON
+  ========================== */
+  const proceedBtn = document.getElementById("whatsapp-btn");
+  const contactSection = document.getElementById("contact");
+
+  proceedBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (!selectedPrice) {
+      alert("Please select a package first!");
+      return;
+    }
+
+    // Store estimate in hidden input
+    document.getElementById("estimated_total").value = totalEl.textContent;
+
+    // Scroll to contact section
+    contactSection.scrollIntoView({ behavior: "smooth" });
   });
 
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.classList.remove("show");
-  });
-}
-  
-/* ==========================
-   MOBILE NAV TOGGLE
-========================== */
-const menuBtn = document.getElementById("menu-btn");
-const nav = document.getElementById("nav");
+  /* ==========================
+     PDF DOWNLOAD
+  ========================== */
+  const proposalBtn = document.getElementById("download-proposal");
 
-if (menuBtn && nav) {
-  menuBtn.addEventListener("click", () => {
-    nav.classList.toggle("show");
+  proposalBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const message = form.message.value.trim();
+    const estimate = document.getElementById("estimated_total").value.trim();
+
+    if (!selectedPrice || !name || !email || !message || !estimate) {
+      alert("Please select a package and fill out your contact info before downloading the proposal.");
+      return;
+    }
+
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Website Project Proposal", 20, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Client Name: ${name}`, 20, 40);
+    doc.text(`Email: ${email}`, 20, 50);
+    doc.text(`Phone: ${form.phone.value || "N/A"}`, 20, 60);
+
+    doc.text(`Selected Package:`, 20, 80);
+    doc.text(siteTypeInput.value, 20, 90);
+
+    const selectedExtras = Array.from(extrasCheckboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.parentElement.textContent.trim());
+
+    doc.text(`Extras: ${selectedExtras.join(", ") || "None"}`, 20, 105);
+    doc.text(`Estimated Total: ${totalEl.textContent}`, 20, 120);
+
+    doc.text(
+      "Thank you for choosing Kamogelo Ronald Kwetsane.\nI will contact you shortly to discuss next steps.",
+      20,
+      145
+    );
+
+    doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
   });
 
-  // Close menu when link is clicked
-  nav.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("show");
+  /* ==========================
+     SKILL MODAL LOGIC
+  ========================== */
+  const skillInfo = {
+    html: { title: "HTML", description: "HTML is the foundation of every website. It structures content such as text, images, forms, and buttons so browsers can display them correctly." },
+    css: { title: "CSS", description: "CSS controls the design and layout of a website, including colors, spacing, responsiveness, and animations to create a professional look." },
+    js: { title: "JavaScript", description: "JavaScript adds interactivity and logic to websites, enabling features like calculators, forms, animations, and dynamic content." },
+    firebase: { title: "Firebase", description: "Firebase provides real-time databases, authentication, and hosting, allowing fast and scalable web and mobile applications." },
+    mongodb: { title: "MongoDB", description: "MongoDB is a NoSQL database used to store and manage large amounts of application data efficiently." },
+    mongoose: { title: "Mongoose", description: "Mongoose helps structure and manage MongoDB data by enforcing schemas and simplifying database interactions." },
+    paystack: { title: "Paystack", description: "Paystack enables secure online payments, allowing businesses to accept cards, bank transfers, and mobile payments." },
+    twilio: { title: "Twilio", description: "Twilio powers SMS and WhatsApp notifications, enabling automated reminders and customer communication." },
+    render: { title: "Render", description: "Render is a cloud platform used to deploy and host web applications securely with automatic scaling." }
+  };
+
+  const modal = document.getElementById("skill-modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalDesc = document.getElementById("modal-description");
+  const modalClose = modal?.querySelector(".modal-close");
+
+  if (modal && modalTitle && modalDesc && modalClose) {
+    document.querySelectorAll(".skills span").forEach(skill => {
+      skill.addEventListener("click", () => {
+        const key = skill.dataset.skill;
+        if (!key || !skillInfo[key]) return;
+        modalTitle.textContent = skillInfo[key].title;
+        modalDesc.textContent = skillInfo[key].description;
+        modal.classList.add("show");
+      });
     });
-  });
-} 
+
+    modalClose.addEventListener("click", () => modal.classList.remove("show"));
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
+  }
+
+  /* ==========================
+     MOBILE NAV TOGGLE
+  ========================== */
+  const menuBtn = document.getElementById("menu-btn");
+  const nav = document.getElementById("nav");
+
+  if (menuBtn && nav) {
+    menuBtn.addEventListener("click", () => nav.classList.toggle("show"));
+    nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => nav.classList.remove("show")));
+  }
+
 });
