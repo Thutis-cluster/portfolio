@@ -220,14 +220,13 @@
     <input type="text" name="name" placeholder="Your Name" required />
     <input type="email" name="email" placeholder="Your Email" required />
     <input type="tel" name="phone" placeholder="Your Phone Number" pattern="^[+0-9\s\-]*$" />
-    <input
-  type="text"
-  name="company"
-  style="display:none"
-/>
+  <input type="text" name="company" style="display:none" /> <!-- Honeypot -->
     <textarea name="message" placeholder="Your Message" required></textarea>
     <input type="hidden" name="estimated_total" id="estimated_total" />
-      <button id="download-proposal" class="btn">Download Proposal (PDF)</button>
+    
+      <button id="download-proposal" type="button" class="btn">
+    Download Proposal (PDF)
+  </button>
     <button type="submit">Send Message</button>
   </form>
 </section>
