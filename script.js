@@ -172,19 +172,23 @@ priceCards.forEach(card => {
 
     // Only recommend extras for Basic Website
     if (title.includes("basic")) {
-      extraLabels[0]?.classList.add("recommended"); // Booking
-      extraLabels[1]?.classList.add("recommended"); // Payment
+      extraLabels[0]?.classList.add("recommended"); // App
+      extraLabels[1]?.classList.add("recommended"); // Booking
+      extraLabels[2]?.classList.add("recommended"); // Payment
+      extraLabels[3]?.classList.add("recommended"); // Admin Dashboard
     }
     
     // Business Website → Booking + WhatsApp
     if (title.includes("business")) {
-      extraLabels[1]?.classList.add("recommended"); // Payment
+      extraLabels[0]?.classList.add("recommended"); // App
+      extraLabels[2]?.classList.add("recommended"); // Payment
+      extraLabels[3]?.classList.add("recommended"); // Admin Dashboard
     }
 
     // E-commerce → Payment + Admin
     if (title.includes("commerce")) {
-      extraLabels[1]?.classList.add("recommended"); // Payment
-      extraLabels[2]?.classList.add("recommended"); // Admin
+      extraLabels[0]?.classList.add("recommended"); // App
+      extraLabels[1]?.classList.add("recommended"); // Booking
     }
   });
 });
