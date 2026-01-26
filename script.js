@@ -152,6 +152,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   siteTypeInput.value = "Select on cards";
   updateTotal();
 
+        // 🔥 NEW: Scroll to estimator
+      calculatorSection.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  extrasCheckboxes.forEach(cb => cb.addEventListener("change", updateTotal));
+
+  siteTypeInput.value = "Select on cards";
+  updateTotal();
+
   /* ==========================
    RECOMMENDED EXTRAS LOGIC
   ==========================
