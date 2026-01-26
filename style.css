@@ -266,13 +266,28 @@ body.dark .hero {
    FEATURED PRICING
 ===================================== */
 .price-card.featured {
-  border: 2px solid var(--primary);
-  transform: scale(1.06);
+  border: 2px dashed var(--primary);
+  transform: scale(1.03);
+  opacity: 0.9;
 }
 
 .price {
   font-size: 2rem;
   margin: 15px 0;
+}
+
+/* =====================================
+   SELECTED PRICING (ACTIVE STATE)
+===================================== */
+.price-card.selected {
+  border: 2px solid var(--secondary);
+  box-shadow: 0 25px 60px rgba(106, 17, 203, 0.35);
+  transform: scale(1.06);
+}
+
+/* Selected should override featured */
+.price-card.featured.selected {
+  border: 2px solid var(--secondary);
 }
 
 /* =====================================
