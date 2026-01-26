@@ -294,15 +294,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
   }
 
-  /* ==========================
-     MOBILE NAV TOGGLE
-  ========================== */
-  const menuBtn = document.getElementById("menu-btn");
-  const nav = document.getElementById("nav");
+/* ==========================
+   MOBILE NAV TOGGLE
+========================== */
+const menuBtn = document.getElementById("menu-btn");
+const nav = document.querySelector("header nav");
 
-  if (menuBtn && nav) {
-    menuBtn.addEventListener("click", () => nav.classList.toggle("show"));
-    nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => nav.classList.remove("show")));
-  }
+if (menuBtn && nav) {
+  menuBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    nav.classList.toggle("show");
+
+    // Icon swap
+    menuBtn.textContent = nav.classList.contains("show") ? "✕" : "☰";
+  });
+
+  // Close when clicking a link
+  nav.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("show");
+      menuBtn.textContent = "☰";
+    });
+  });
+
+  // Close when clicking outside
+  document.addEventListener("click", e => {
+    if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
+      nav.classList.remove("show");
+      menuBtn.textContent = "☰";
+    }
+  });
+}
 
 });
