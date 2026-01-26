@@ -470,9 +470,17 @@ input[type="checkbox"]:checked::after {
   background: none;
   border: none;
   cursor: pointer;
+  color: var(--text);
+  font-size: 2rem;
+  padding: 6px 10px;
+  transition: transform 0.25s ease;
 }
 
 @media (max-width: 768px) {
+  header {
+    justify-content: space-between;
+  }
+   
   nav {
     position: fixed;
     top: 70px;
@@ -481,7 +489,7 @@ input[type="checkbox"]:checked::after {
     background: var(--bg);
     backdrop-filter: blur(12px);
 
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     gap: 22px;
@@ -501,7 +509,12 @@ input[type="checkbox"]:checked::after {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
+    display: flex;
   }
+
+   nav.show ~ .menu-btn {
+  transform: rotate(90deg);
+}
 
   nav a {
     font-size: 1.1rem;
