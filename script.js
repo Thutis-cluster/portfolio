@@ -116,50 +116,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   const siteTypeInput = document.getElementById("site-type");
   const extrasCheckboxes = document.querySelectorAll(".extra");
   const totalEl = document.getElementById("total");
+  const calculator = document.querySelector(".calculator");
 
   let selectedPrice = 0;
 
   function updateTotal() {
     let extrasTotal = 0;
     extrasCheckboxes.forEach(cb => {
-      if (cb.checked) extrasTotal += parseInt(cb.value);
+      if (cb.checked) extrasTotal += Number(cb.value);
     });
+
     const total = selectedPrice + extrasTotal;
     totalEl.textContent = `R${total.toLocaleString("en-ZA")}`;
   }
 
-  // Price card selection
   priceCards.forEach(card => {
     const btn = card.querySelector(".select-price");
+
     btn.addEventListener("click", () => {
-      // Remove previous selection highlight
       priceCards.forEach(c => c.classList.remove("selected"));
       card.classList.add("selected");
 
-      // Update input and numeric price
       const priceText = card.querySelector(".price").textContent;
-      selectedPrice = parseInt(priceText.replace(/[^0-9]/g, ""));
+      selectedPrice = Number(priceText.replace(/[^0-9]/g, ""));
       siteTypeInput.value = `${card.querySelector("h3").textContent} (${priceText})`;
 
       updateTotal();
-    });
-  });
 
-  // Extras checkbox
-  extrasCheckboxes.forEach(cb => cb.addEventListener("change", updateTotal));
-
-  // Initialize
-  siteTypeInput.value = "Select on cards";
-  updateTotal();
-
-        // 🔥 NEW: Scroll to estimator
-      calculatorSection.scrollIntoView({ behavior: "smooth" });
+      // 🔥 SCROLL TO ESTIMATOR
+      calculator?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
   extrasCheckboxes.forEach(cb => cb.addEventListener("change", updateTotal));
-
-  siteTypeInput.value = "Select on cards";
   updateTotal();
 
   /* ==========================
