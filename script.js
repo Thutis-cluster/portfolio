@@ -218,46 +218,91 @@ document.addEventListener("DOMContentLoaded", async () => {
   ========================== */
   const proposalBtn = document.getElementById("download-proposal");
 
-  proposalBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+ proposalBtn.addEventListener("click", (e) => {
+  e.preventDefault();
 
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const message = form.message.value.trim();
-    const estimate = document.getElementById("estimated_total").value.trim();
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  const phone = form.phone.value.trim() || "N/A";
+  const message = form.message.value.trim();
+  const estimate = document.getElementById("estimated_total").value.trim();
+  const selectedPackage = siteTypeInput.value.trim();
 
-    if (!selectedPrice || !name || !email || !message || !estimate) {
-      alert("Please select a package and fill out your contact info before downloading the proposal.");
-      return;
-    }
+  // Validate
+  if (!selectedPackage || !name || !email || !message || !estimate) {
+    alert("Please select a package and fill out your contact info before downloading the proposal.");
+    return;
+  }
 
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text("Website Project Proposal", 20, 20);
+  const selectedExtras = Array.from(extrasCheckboxes)
+    .filter(cb => cb.checked)
+    .map(cb => cb.parentElement.textContent.trim());
 
-    doc.setFontSize(12);
-    doc.text(`Client Name: ${name}`, 20, 40);
-    doc.text(`Email: ${email}`, 20, 50);
-    doc.text(`Phone: ${form.phone.value || "N/A"}`, 20, 60);
+  const doc = new jsPDF();
 
-    doc.text(`Selected Package:`, 20, 80);
-    doc.text(siteTypeInput.value, 20, 90);
+  // ===== Header =====
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("Website Project Proposal", 20, 25);
 
-    const selectedExtras = Array.from(extrasCheckboxes)
-      .filter(cb => cb.checked)
-      .map(cb => cb.parentElement.textContent.trim());
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.5);
+  doc.line(20, 30, 190, 30); // horizontal line
 
-    doc.text(`Extras: ${selectedExtras.join(", ") || "None"}`, 20, 105);
-    doc.text(`Estimated Total: ${totalEl.textContent}`, 20, 120);
+  let y = 40; // starting y position for content
 
-    doc.text(
-      "Thank you for choosing Kamogelo Ronald Kwetsane.\nI will contact you shortly to discuss next steps.",
-      20,
-      145
-    );
+  // ===== Client Info =====
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Client Information", 20, y);
+  y += 8;
 
-    doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
-  });
+  doc.setFont("helvetica", "normal");
+  doc.text(`Name: ${name}`, 20, y); y += 6;
+  doc.text(`Email: ${email}`, 20, y); y += 6;
+  doc.text(`Phone: ${phone}`, 20, y); y += 12;
+
+  // ===== Selected Package & Extras =====
+  doc.setFont("helvetica", "bold");
+  doc.text("Selected Package", 20, y); y += 8;
+  doc.setFont("helvetica", "normal");
+  doc.text(selectedPackage, 20, y); y += 8;
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Selected Extras", 20, y); y += 8;
+  doc.setFont("helvetica", "normal");
+  doc.text(selectedExtras.join(", ") || "None", 20, y); y += 12;
+
+  // ===== Estimate Highlight =====
+  doc.setFillColor(0, 198, 255); // bright blue
+  doc.setDrawColor(0, 0, 0);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.rect(20, y, 80, 10, "F"); // filled rectangle
+  doc.text(`Estimated Total: ${estimate}`, 25, y + 7);
+  y += 20;
+  doc.setTextColor(0, 0, 0); // reset text color
+
+  // ===== Client Message =====
+  doc.setFont("helvetica", "bold");
+  doc.text("Client Message", 20, y); y += 8;
+  doc.setFont("helvetica", "normal");
+  doc.text(message, 20, y, { maxWidth: 170 }); // wrap text
+  y += 20;
+
+  // ===== Footer =====
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(10);
+  doc.text(
+    "Thank you for choosing Kamogelo Ronald Kwetsane.\nI will contact you shortly to discuss next steps.",
+    20,
+    y,
+    { maxWidth: 170 }
+  );
+
+  // Save PDF
+  doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
+});
 
   /* ==========================
      SKILL MODAL LOGIC
