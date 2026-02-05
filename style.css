@@ -253,7 +253,8 @@ body.dark .hero {
   border-radius: 18px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  transition: all 0.35s ease;
+  transition: all 3s ease;
+  will-change: transform;
 }
 
 .project-card:hover,
@@ -282,12 +283,16 @@ body.dark .hero {
 .price-card.selected {
   border: 2px solid var(--secondary);
   box-shadow: 0 25px 60px rgba(106, 17, 203, 0.35);
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 /* Selected should override featured */
 .price-card.featured.selected {
   border: 2px solid var(--secondary);
+}
+
+.price-card:not(.selected) {
+  transform: scale(1);
 }
 
 /* =====================================
