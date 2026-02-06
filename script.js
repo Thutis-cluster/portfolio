@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   ========================== */
   const proposalBtn = document.getElementById("download-proposal");
 
- proposalBtn.addEventListener("click", (e) => {
+proposalBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
   const name = form.name.value.trim();
