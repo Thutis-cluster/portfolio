@@ -221,23 +221,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 proposalBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const name = form.name.value.trim();
-  const email = form.email.value.trim();
+  // Get form values with defaults
+  const name = form.name.value.trim() || "Client Name";
+  const email = form.email.value.trim() || "N/A";
   const phone = form.phone.value.trim() || "N/A";
-  const message = form.message.value.trim();
-  const estimate = document.getElementById("estimated_total").value.trim();
-  const selectedPackage = siteTypeInput.value.trim();
+  const message = form.message.value.trim() || "No message provided.";
+  const estimate = document.getElementById("estimated_total").value.trim() || "R0";
+  const selectedPackage = siteTypeInput.value.trim() || "No package selected";
 
-  // Validate
-  if (!selectedPackage || !name || !email || !message || !estimate) {
-    alert("Please select a package and fill out your contact info before downloading the proposal.");
-    return;
-  }
-
+  // Get selected extras
   const selectedExtras = Array.from(extrasCheckboxes)
     .filter(cb => cb.checked)
     .map(cb => cb.parentElement.textContent.trim());
 
+  // Create PDF
   const doc = new jsPDF();
 
   // ===== Header =====
@@ -247,9 +244,9 @@ proposalBtn.addEventListener("click", (e) => {
 
   doc.setDrawColor(0);
   doc.setLineWidth(0.5);
-  doc.line(20, 30, 190, 30); // horizontal line
+  doc.line(20, 30, 190, 30);
 
-  let y = 40; // starting y position for content
+  let y = 40;
 
   // ===== Client Info =====
   doc.setFontSize(14);
@@ -274,20 +271,20 @@ proposalBtn.addEventListener("click", (e) => {
   doc.text(selectedExtras.join(", ") || "None", 20, y); y += 12;
 
   // ===== Estimate Highlight =====
-  doc.setFillColor(0, 198, 255); // bright blue
+  doc.setFillColor(0, 198, 255);
   doc.setDrawColor(0, 0, 0);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.rect(20, y, 80, 10, "F"); // filled rectangle
+  doc.rect(20, y, 80, 10, "F");
   doc.text(`Estimated Total: ${estimate}`, 25, y + 7);
   y += 20;
-  doc.setTextColor(0, 0, 0); // reset text color
+  doc.setTextColor(0, 0, 0);
 
   // ===== Client Message =====
   doc.setFont("helvetica", "bold");
   doc.text("Client Message", 20, y); y += 8;
   doc.setFont("helvetica", "normal");
-  doc.text(message, 20, y, { maxWidth: 170 }); // wrap text
+  doc.text(message, 20, y, { maxWidth: 170 });
   y += 20;
 
   // ===== Footer =====
