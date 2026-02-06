@@ -216,72 +216,107 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ==========================
      PDF DOWNLOAD
   ========================== */
-const proposalBtn = document.getElementById("download-proposal");
-
-proposalBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  // ✅ FIX: get jsPDF from window.jspdf
+function generateProposalPDF() {
   const { jsPDF } = window.jspdf;
 
-  const name = form.name.value.trim() || "Client Name";
-  const email = form.email.value.trim() || "N/A";
-  const phone = form.phone.value.trim() || "N/A";
-  const message = form.message.value.trim() || "No message provided.";
-  const estimate =
-    document.getElementById("estimated_total").value.trim() || "R0";
-  const selectedPackage =
-    siteTypeInput.value.trim() || "No package selected";
+  const name = form.name.value || "Client";
+  const email = form.email.value || "N/A";
+  const phone = form.phone.value || "N/A";
+  const message = form.message.value || "No message provided";
+  const estimate = document.getElementById("estimated_total").value || "R0";
+  const selectedPackage = siteTypeInput.value || "Not selected";
 
-  const selectedExtras = Array.from(extrasCheckboxes)
-    .filter(cb => cb.checked)
-    .map(cb => cb.parentElement.textContent.trim());
+  const extras =
+    Array.from(extrasCheckboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.parentElement.textContent.trim())
+      .join(", ") || "None";
 
-  // ✅ NOW this works
+  // 📅 Date & Invoice Number
+  const today = new Date();
+  const invoiceDate = today.toLocaleDateString("en-ZA");
+  const invoiceNumber =
+    "KRK-" +
+    today.getFullYear() +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    String(today.getDate()).padStart(2, "0") +
+    "-" +
+    Math.floor(1000 + Math.random() * 9000);
+
   const doc = new jsPDF();
 
-  doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
-  doc.text("Website Project Proposal", 20, 25);
+  /* ===== HEADER ===== */
+  doc.setFillColor(30, 30, 30);
+  doc.rect(0, 0, 210, 30, "F");
 
-  doc.line(20, 30, 190, 30);
-
-  let y = 40;
-
-  doc.setFontSize(14);
-  doc.text("Client Information", 20, y);
-  y += 10;
-
-  doc.setFontSize(12);
-  doc.text(`Name: ${name}`, 20, y); y += 6;
-  doc.text(`Email: ${email}`, 20, y); y += 6;
-  doc.text(`Phone: ${phone}`, 20, y); y += 10;
-
-  doc.setFont(undefined, "bold");
-  doc.text("Selected Package", 20, y); y += 6;
-  doc.setFont(undefined, "normal");
-  doc.text(selectedPackage, 20, y); y += 10;
-
-  doc.setFont(undefined, "bold");
-  doc.text("Selected Extras", 20, y); y += 6;
-  doc.setFont(undefined, "normal");
-  doc.text(selectedExtras.join(", ") || "None", 20, y); y += 10;
-
-  doc.setFillColor(0, 198, 255);
   doc.setTextColor(255, 255, 255);
-  doc.rect(20, y, 80, 10, "F");
-  doc.text(`Estimated Total: ${estimate}`, 25, y + 7);
+  doc.setFontSize(18);
+  doc.text("PROJECT PROPOSAL / INVOICE", 105, 20, { align: "center" });
 
   doc.setTextColor(0, 0, 0);
-  y += 20;
+  let y = 45;
 
+  /* ===== INVOICE META ===== */
+  doc.setFontSize(11);
+  doc.setFont(undefined, "bold");
+  doc.text(`Invoice #: ${invoiceNumber}`, 140, y);
+  y += 6;
+  doc.text(`Date: ${invoiceDate}`, 140, y);
+
+  y = 55;
+
+  /* ===== BUSINESS INFO ===== */
+  doc.setFont(undefined, "bold");
+  doc.text("Kamogelo Ronald Kwetsane", 20, y); y += 6;
+  doc.setFont(undefined, "normal");
+  doc.text("Web Designer & Developer", 20, y);
+  doc.text("South Africa", 20, y + 5);
+  y += 15;
+
+  /* ===== CLIENT INFO ===== */
+  doc.setFont(undefined, "bold");
+  doc.text("Billed To:", 20, y); y += 6;
+  doc.setFont(undefined, "normal");
+  doc.text(name, 20, y); y += 5;
+  doc.text(email, 20, y); y += 5;
+  doc.text(phone, 20, y); y += 10;
+
+  /* ===== PROJECT DETAILS ===== */
+  doc.setFont(undefined, "bold");
+  doc.text("Project Details", 20, y); y += 6;
+  doc.setFont(undefined, "normal");
+  doc.text(`Package: ${selectedPackage}`, 20, y); y += 6;
+  doc.text(`Extras: ${extras}`, 20, y); y += 12;
+
+  /* ===== TOTAL BOX ===== */
+  doc.setFillColor(0, 198, 255);
+  doc.rect(20, y, 170, 14, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(14);
+  doc.text(`TOTAL ESTIMATE: ${estimate}`, 105, y + 9, { align: "center" });
+
+  doc.setTextColor(0, 0, 0);
+  y += 25;
+
+  /* ===== MESSAGE ===== */
+  doc.setFontSize(12);
   doc.setFont(undefined, "bold");
   doc.text("Client Message", 20, y); y += 6;
   doc.setFont(undefined, "normal");
   doc.text(message, 20, y, { maxWidth: 170 });
 
-  doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
-});
+  /* ===== FOOTER ===== */
+  doc.setFontSize(10);
+  doc.setFont(undefined, "italic");
+  doc.text(
+    "Estimate valid for 14 days. A 50% deposit is required before work begins.",
+    105,
+    285,
+    { align: "center" }
+  );
+
+  doc.save(`Invoice_${invoiceNumber}.pdf`);
+}
 
   /* ==========================
      SKILL MODAL LOGIC
