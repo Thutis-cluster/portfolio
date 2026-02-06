@@ -470,15 +470,14 @@ input[type="checkbox"]:checked::after {
 
 /* ===== Mobile Navigation ===== */
 .menu-btn {
-  display: none;
-  font-size: 1.8rem;
+  font-size: 2rem;
   background: none;
   border: none;
   cursor: pointer;
   color: var(--text);
-  font-size: 2rem;
   padding: 6px 10px;
   transition: transform 0.25s ease;
+  z-index: 1001; /* make sure it’s above the nav */
 }
 
 @media (max-width: 768px) {
