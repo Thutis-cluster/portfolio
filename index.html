@@ -224,13 +224,15 @@
     <textarea name="message" placeholder="Your Message" required></textarea>
     <input type="hidden" name="estimated_total" id="estimated_total" />
     
-      <button id="download-proposal" type="button" class="btn">
-    Download Proposal (PDF)
-  </button>
-    <button type="submit">Send Message</button>
+    <input type="hidden" name="selected_package" id="email_package">
+    <input type="hidden" name="selected_extras" id="email_extras">
+
+    <button type="submit" class="btn">Send & Download Proposal</button>
   </form>
 </section>
 
+  <div id="popup" class="popup"></div>
+  
     <!-- Scroll to Top Button -->
 <button id="scrollTopBtn" title="Go to top">⬆</button>
   
