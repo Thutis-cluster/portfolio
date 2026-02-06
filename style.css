@@ -482,6 +482,12 @@ input[type="checkbox"]:checked::after {
 }
 
 @media (max-width: 768px) {
+  .menu-btn {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
   header {
     justify-content: space-between;
   }
