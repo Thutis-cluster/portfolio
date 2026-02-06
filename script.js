@@ -216,88 +216,70 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ==========================
      PDF DOWNLOAD
   ========================== */
-  const proposalBtn = document.getElementById("download-proposal");
+const proposalBtn = document.getElementById("download-proposal");
 
 proposalBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
-  // Get form values with defaults
+  // ✅ FIX: get jsPDF from window.jspdf
+  const { jsPDF } = window.jspdf;
+
   const name = form.name.value.trim() || "Client Name";
   const email = form.email.value.trim() || "N/A";
   const phone = form.phone.value.trim() || "N/A";
   const message = form.message.value.trim() || "No message provided.";
-  const estimate = document.getElementById("estimated_total").value.trim() || "R0";
-  const selectedPackage = siteTypeInput.value.trim() || "No package selected";
+  const estimate =
+    document.getElementById("estimated_total").value.trim() || "R0";
+  const selectedPackage =
+    siteTypeInput.value.trim() || "No package selected";
 
-  // Get selected extras
   const selectedExtras = Array.from(extrasCheckboxes)
     .filter(cb => cb.checked)
     .map(cb => cb.parentElement.textContent.trim());
 
-  // Create PDF
+  // ✅ NOW this works
   const doc = new jsPDF();
 
-  // ===== Header =====
   doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
   doc.text("Website Project Proposal", 20, 25);
 
-  doc.setDrawColor(0);
-  doc.setLineWidth(0.5);
   doc.line(20, 30, 190, 30);
 
   let y = 40;
 
-  // ===== Client Info =====
   doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
   doc.text("Client Information", 20, y);
-  y += 8;
+  y += 10;
 
-  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
   doc.text(`Name: ${name}`, 20, y); y += 6;
   doc.text(`Email: ${email}`, 20, y); y += 6;
-  doc.text(`Phone: ${phone}`, 20, y); y += 12;
+  doc.text(`Phone: ${phone}`, 20, y); y += 10;
 
-  // ===== Selected Package & Extras =====
-  doc.setFont("helvetica", "bold");
-  doc.text("Selected Package", 20, y); y += 8;
-  doc.setFont("helvetica", "normal");
-  doc.text(selectedPackage, 20, y); y += 8;
+  doc.setFont(undefined, "bold");
+  doc.text("Selected Package", 20, y); y += 6;
+  doc.setFont(undefined, "normal");
+  doc.text(selectedPackage, 20, y); y += 10;
 
-  doc.setFont("helvetica", "bold");
-  doc.text("Selected Extras", 20, y); y += 8;
-  doc.setFont("helvetica", "normal");
-  doc.text(selectedExtras.join(", ") || "None", 20, y); y += 12;
+  doc.setFont(undefined, "bold");
+  doc.text("Selected Extras", 20, y); y += 6;
+  doc.setFont(undefined, "normal");
+  doc.text(selectedExtras.join(", ") || "None", 20, y); y += 10;
 
-  // ===== Estimate Highlight =====
   doc.setFillColor(0, 198, 255);
-  doc.setDrawColor(0, 0, 0);
-  doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
   doc.rect(20, y, 80, 10, "F");
   doc.text(`Estimated Total: ${estimate}`, 25, y + 7);
-  y += 20;
+
   doc.setTextColor(0, 0, 0);
-
-  // ===== Client Message =====
-  doc.setFont("helvetica", "bold");
-  doc.text("Client Message", 20, y); y += 8;
-  doc.setFont("helvetica", "normal");
-  doc.text(message, 20, y, { maxWidth: 170 });
   y += 20;
 
-  // ===== Footer =====
-  doc.setFont("helvetica", "italic");
-  doc.setFontSize(10);
-  doc.text(
-    "Thank you for choosing Kamogelo Ronald Kwetsane.\nI will contact you shortly to discuss next steps.",
-    20,
-    y,
-    { maxWidth: 170 }
-  );
+  doc.setFont(undefined, "bold");
+  doc.text("Client Message", 20, y); y += 6;
+  doc.setFont(undefined, "normal");
+  doc.text(message, 20, y, { maxWidth: 170 });
 
-  // Save PDF
   doc.save(`Proposal_${name.replace(/\s+/g, "_")}.pdf`);
 });
 
