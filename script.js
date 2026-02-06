@@ -318,6 +318,48 @@ function generateProposalPDF() {
   doc.save(`Invoice_${invoiceNumber}.pdf`);
 }
 
+    /* ==========================
+     FORM SUBMIT (EMAIL + PDF)
+  ========================== */
+  if (form) {
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      // honeypot
+      if (form.company.value) return;
+
+      // hidden fields for email
+      document.getElementById("estimated_total").value = totalEl.textContent;
+
+      document.getElementById("email_package").value = siteTypeInput.value;
+      document.getElementById("email_extras").value =
+        Array.from(extrasCheckboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.parentElement.textContent.trim())
+          .join(", ") || "None";
+
+      const btn = form.querySelector("button[type='submit']");
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      emailjs.sendForm(
+        EMAIL_CONFIG.serviceId,
+        EMAIL_CONFIG.templateId,
+        form
+      ).then(() => {
+        generateProposalPDF(); // 🔥 auto download
+        form.reset();
+        showPopup("✅ Proposal sent & downloaded!", true);
+      }).catch(err => {
+        console.error(err);
+        showPopup("❌ Failed to send message", false);
+      }).finally(() => {
+        btn.disabled = false;
+        btn.textContent = "Send Message";
+      });
+    });
+  }
+
   /* ==========================
      SKILL MODAL LOGIC
   ========================== */
