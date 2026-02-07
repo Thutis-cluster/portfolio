@@ -494,7 +494,7 @@ input[type="checkbox"]:checked::after {
 ========================== */
 @media (max-width: 768px) {
   .section {
-    padding: 30px 6%;
+    padding: 20px 4%;
   }
 
   .projects,
