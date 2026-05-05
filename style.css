@@ -623,25 +623,156 @@ footer {
   transform: translateY(0);
 }
 
-/* =====================================
-   MOBILE
-===================================== */
+/* ==========================
+   MOBILE (≤768px)
+========================== */
 @media (max-width: 768px) {
+
+  /* ===== HEADER ===== */
   header {
-    padding: 15px 6%;
+    padding: 12px 5%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
+  nav {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: none;
+    flex-direction: column;
+    padding: 20px;
+    gap: 18px;
+  }
+
+  nav.active {
+    display: flex;
+  }
+
+  nav a {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  /* Optional hamburger button */
+  .menu-btn {
+    display: block;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* ===== HERO ===== */
   .hero {
-    margin-top: 80px;
-    padding: 25% 6%;
+    margin-top: 70px;
+    padding: 30% 5% 20%;
     text-align: center;
   }
 
-  .btn {
-    margin: 25px auto 0;
+  .hero h1 {
+    font-size: 1.9rem;
   }
 
+  .hero p {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    display: block;
+    margin: 25px auto 0;
+    width: 100%;
+    max-width: 260px;
+    text-align: center;
+  }
+
+  /* ===== SECTIONS ===== */
   .section {
-    padding: 80px 6%;
+    padding: 70px 5%;
+    text-align: center;
+  }
+
+  .section h2 {
+    font-size: 1.6rem;
+  }
+
+  .section p {
+    font-size: 0.95rem;
+    margin: 0 auto;
+  }
+
+  /* ===== CARDS / GRID ===== */
+  .projects,
+  .pricing,
+  .testimonials {
+    grid-template-columns: 1fr; /* force single column */
+    gap: 20px;
+  }
+
+  .project-card,
+  .price-card,
+  .testimonial-card {
+    padding: 20px;
+  }
+
+  /* remove scale on mobile (prevents overflow) */
+  .price-card.featured,
+  .price-card.selected {
+    transform: none;
+  }
+
+  /* ===== SERVICES ===== */
+  .services {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .service-card {
+    padding: 20px;
+  }
+
+  /* ===== SKILLS ===== */
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .skills span {
+    font-size: 0.8rem;
+    padding: 8px 14px;
+  }
+
+  /* ===== FORMS ===== */
+  form,
+  .calculator {
+    width: 100%;
+  }
+
+  input,
+  textarea {
+    font-size: 0.95rem;
+  }
+
+  /* ===== FLOATING BUTTONS ===== */
+  .whatsapp-btn {
+    bottom: 15px;
+    right: 15px;
+    font-size: 24px;
+    padding: 12px;
+  }
+
+  #scrollTopBtn {
+    bottom: 80px;
+    right: 15px;
+  }
+
+  /* ===== MOBILE CTA ===== */
+  .mobile-cta {
+    width: 90%;
+    text-align: center;
   }
 }
