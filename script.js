@@ -230,31 +230,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ==========================
      MOBILE NAV
   ========================== */
-  const menuBtn = document.getElementById("menu-btn");
-  const nav = document.querySelector("header nav");
+const menuBtn = document.getElementById("menu-btn");
+const nav = document.querySelector("header nav");
+const overlay = document.getElementById("nav-overlay");
 
-  if (menuBtn && nav) {
-    menuBtn.addEventListener("click", e => {
-      e.stopPropagation();
+if (menuBtn && nav && overlay) {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
 
-      nav.classList.toggle("active");
-      menuBtn.textContent =
-        nav.classList.contains("active") ? "✕" : "☰";
+    nav.classList.toggle("active");
+    overlay.classList.toggle("active");
+
+    menuBtn.textContent =
+      nav.classList.contains("active") ? "✕" : "☰";
+  });
+
+  // Close when clicking link
+  nav.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("active");
+      overlay.classList.remove("active");
+      menuBtn.textContent = "☰";
     });
+  });
 
-    nav.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        nav.classList.remove("active");
-        menuBtn.textContent = "☰";
-      });
-    });
-
-    document.addEventListener("click", e => {
-      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
-        nav.classList.remove("active");
-        menuBtn.textContent = "☰";
-      }
-    });
-  }
+  // Close when clicking overlay
+  overlay.addEventListener("click", () => {
+    nav.classList.remove("active");
+    overlay.classList.remove("active");
+    menuBtn.textContent = "☰";
+  });
+}
 
 });
