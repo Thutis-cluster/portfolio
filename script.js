@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   updateTotal();
-
+  
   /* ==========================
      RECOMMENDED EXTRAS
   ========================== */
@@ -144,6 +144,62 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+ /* ==========================
+     PROCEED TO CONTACT BUTTON
+  ========================== */
+  const proceedBtn = document.getElementById("whatsapp-btn");
+  const contactSection = document.getElementById("contact");
+
+  proceedBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (!selectedPrice) {
+      alert("Please select a package first!");
+      return;
+    }
+
+    // Store estimate in hidden input
+    document.getElementById("estimated_total").value = totalEl.textContent;
+
+    // Scroll to contact section
+    contactSection.scrollIntoView({ behavior: "smooth" });
+  });
+  
+ /* ==========================
+     SKILL MODAL LOGIC
+  ========================== */
+  const skillInfo = {
+    html: { title: "HTML", description: "HTML is the foundation of every website. It structures content such as text, images, forms, and buttons so browsers can display them correctly." },
+    css: { title: "CSS", description: "CSS controls the design and layout of a website, including colors, spacing, responsiveness, and animations to create a professional look." },
+    js: { title: "JavaScript", description: "JavaScript adds interactivity and logic to websites, enabling features like calculators, forms, animations, and dynamic content." },
+    firebase: { title: "Firebase", description: "Firebase provides real-time databases, authentication, and hosting, allowing fast and scalable web and mobile applications." },
+    mongodb: { title: "MongoDB", description: "MongoDB is a NoSQL database used to store and manage large amounts of application data efficiently." },
+    mongoose: { title: "Mongoose", description: "Mongoose helps structure and manage MongoDB data by enforcing schemas and simplifying database interactions." },
+    paystack: { title: "Paystack", description: "Paystack enables secure online payments, allowing businesses to accept cards, bank transfers, and mobile payments." },
+    twilio: { title: "Twilio", description: "Twilio powers SMS and WhatsApp notifications, enabling automated reminders and customer communication." },
+    render: { title: "Render", description: "Render is a cloud platform used to deploy and host web applications securely with automatic scaling." }
+  };
+
+  const modal = document.getElementById("skill-modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalDesc = document.getElementById("modal-description");
+  const modalClose = modal?.querySelector(".modal-close");
+
+  if (modal && modalTitle && modalDesc && modalClose) {
+    document.querySelectorAll(".skills span").forEach(skill => {
+      skill.addEventListener("click", () => {
+        const key = skill.dataset.skill;
+        if (!key || !skillInfo[key]) return;
+        modalTitle.textContent = skillInfo[key].title;
+        modalDesc.textContent = skillInfo[key].description;
+        modal.classList.add("show");
+      });
+    });
+
+    modalClose.addEventListener("click", () => modal.classList.remove("show"));
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
+  }
+  
   /* ==========================
      CONTACT FORM + PDF
   ========================== */
@@ -261,5 +317,23 @@ if (menuBtn && nav && overlay) {
     menuBtn.textContent = "☰";
   });
 }
+
+    /* ==========================
+     CLOSE MOBILE NAV ON SCROLL
+  ========================== */
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+
+    // only close if menu is open
+    if (nav.classList.contains("active")) {
+      nav.classList.remove("active");
+      overlay.classList.remove("active");
+      menuBtn.textContent = "☰";
+    }
+
+    lastScrollY = currentScrollY;
+  });
 
 });
