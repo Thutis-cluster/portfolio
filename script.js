@@ -396,35 +396,33 @@ function generateProposalPDF() {
   }
 
 /* ==========================
-   MOBILE NAV TOGGLE
+   MOBILE NAV TOGGLE (FIXED)
 ========================== */
 const menuBtn = document.getElementById("menu-btn");
 const nav = document.querySelector("header nav");
 
 if (menuBtn && nav) {
-  menuBtn.addEventListener("click", e => {
+  menuBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    nav.classList.toggle("show");
 
-    // Icon swap
-    menuBtn.textContent = nav.classList.contains("show") ? "✕" : "☰";
+    nav.classList.toggle("active"); // ✅ match CSS
+    menuBtn.textContent = nav.classList.contains("active") ? "✕" : "☰";
   });
 
-  // Close when clicking a link
+  // Close when clicking link
   nav.querySelectorAll("a").forEach(link => {
     link.addEventListener("click", () => {
-      nav.classList.remove("show");
+      nav.classList.remove("active");
       menuBtn.textContent = "☰";
     });
   });
 
   // Close when clicking outside
-  document.addEventListener("click", e => {
+  document.addEventListener("click", (e) => {
     if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
-      nav.classList.remove("show");
+      nav.classList.remove("active");
       menuBtn.textContent = "☰";
     }
   });
 }
-
 });
