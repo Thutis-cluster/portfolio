@@ -685,6 +685,7 @@ footer {
     font-size: 1.6rem;
     cursor: pointer;
     transition: transform 0.25s ease;
+    margin-left: 0px;
   }
 
   .menu-btn:hover {
@@ -713,8 +714,8 @@ footer {
   /* ===== HERO ===== */
   .hero {
     min-height: fit-content !important;
-    margin-top: 70px;
-    padding: 30% 5% 20%;
+    margin-top: 0px;
+    padding: 10% 5% 20%;
     text-align: center;
   }
 
