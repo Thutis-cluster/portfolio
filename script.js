@@ -205,41 +205,173 @@ document.addEventListener("DOMContentLoaded", async () => {
   ========================== */
   const form = document.getElementById("contact-form");
 
-  function generateProposalPDF() {
-    const { jsPDF } = window.jspdf;
+function generateProposalPDF() {
+  const { jsPDF } = window.jspdf;
 
-    const name = form.name.value || "Client";
-    const email = form.email.value || "N/A";
-    const phone = form.phone.value || "N/A";
-    const message = form.message.value || "No message";
-    const estimate =
-      document.getElementById("estimated_total").value || "R0";
-    const selectedPackage = siteTypeInput.value || "Not selected";
+  const name = form.name.value || "Client";
+  const email = form.email.value || "N/A";
+  const phone = form.phone.value || "N/A";
+  const message = form.message.value || "No message provided";
+  const estimate = document.getElementById("estimated_total").value || "R0";
+  const selectedPackage = siteTypeInput.value || "Not selected";
 
-    const extras =
-      Array.from(extrasCheckboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.parentElement.textContent.trim())
-        .join(", ") || "None";
+  const extras =
+    Array.from(extrasCheckboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.parentElement.textContent.trim())
+      .join(", ") || "None";
 
-    const today = new Date();
-    const invoiceNumber =
-      "KRK-" +
-      today.getFullYear() +
-      Math.floor(1000 + Math.random() * 9000);
+  /* ==========================
+     INVOICE META
+  ========================== */
+  const today = new Date();
 
-    const doc = new jsPDF();
+  const invoiceDate = today.toLocaleDateString("en-ZA");
 
-    doc.text("PROJECT PROPOSAL", 20, 20);
-    doc.text(`Client: ${name}`, 20, 40);
-    doc.text(`Email: ${email}`, 20, 50);
-    doc.text(`Phone: ${phone}`, 20, 60);
-    doc.text(`Package: ${selectedPackage}`, 20, 80);
-    doc.text(`Extras: ${extras}`, 20, 90);
-    doc.text(`Total: ${estimate}`, 20, 110);
+  const invoiceNumber =
+    "KRK-" +
+    today.getFullYear() +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    String(today.getDate()).padStart(2, "0") +
+    "-" +
+    Math.floor(1000 + Math.random() * 9000);
 
-    doc.save(`Invoice_${invoiceNumber}.pdf`);
+  const doc = new jsPDF();
+
+  let y = 20;
+
+  const pageHeight = doc.internal.pageSize.height;
+const marginBottom = 25;
+
+function checkPageBreak(y) {
+  if (y >= pageHeight - marginBottom) {
+    doc.addPage();
+    return 20;
   }
+  return y;
+}
+  
+  /* ==========================
+     HEADER
+  ========================== */
+  doc.setFillColor(30, 30, 30);
+  doc.rect(0, 0, 210, 30, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.text("PROJECT PROPOSAL / INVOICE", 105, 20, { align: "center" });
+
+  /* ==========================
+     INVOICE DETAILS
+  ========================== */
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(11);
+
+  y = 45;
+
+  doc.setFont(undefined, "bold");
+  doc.text(`Invoice #: ${invoiceNumber}`, 140, y);
+  y += 6;
+  doc.text(`Date: ${invoiceDate}`, 140, y);
+
+  /* ==========================
+     BUSINESS INFO
+  ========================== */
+  y = 55;
+  doc.setFont(undefined, "bold");
+  doc.text("Kamogelo Ronald Kwetsane", 20, y); y += 6;
+
+  doc.setFont(undefined, "normal");
+  doc.text("Web Designer & Developer", 20, y); y += 5;
+  doc.text("South Africa", 20, y); y += 10;
+
+  /* ==========================
+     CLIENT INFO
+  ========================== */
+  doc.setFont(undefined, "bold");
+  doc.text("Billed To:", 20, y); y += 6;
+
+  doc.setFont(undefined, "normal");
+  doc.text(name, 20, y); y += 5;
+  doc.text(email, 20, y); y += 5;
+  doc.text(phone, 20, y); y += 10;
+
+  /* ==========================
+     PROJECT DETAILS
+  ========================== */
+ doc.setFont(undefined, "bold");
+y = checkPageBreak(y);
+doc.text("Project Details", 20, y);
+y += 6;
+
+doc.setFont(undefined, "normal");
+
+y = checkPageBreak(y);
+doc.text(`Package: ${selectedPackage}`, 20, y);
+y += 6;
+
+const extrasLines = doc.splitTextToSize(`Extras: ${extras}`, 170);
+
+extrasLines.forEach(line => {
+  y = checkPageBreak(y);
+  doc.text(line, 20, y);
+  y += 6;
+});
+
+  /* ==========================
+     TOTAL BOX
+  ========================== */
+  doc.setFillColor(0, 198, 255);
+  doc.rect(20, y, 170, 14, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(14);
+  doc.text(`TOTAL ESTIMATE: ${estimate}`, 105, y + 9, {
+    align: "center"
+  });
+
+  y += 25;
+
+  /* ==========================
+     MESSAGE
+  ========================== */
+doc.setTextColor(0, 0, 0);
+doc.setFontSize(12);
+
+doc.setFont(undefined, "bold");
+y = checkPageBreak(y);
+doc.text("Client Message", 20, y);
+y += 6;
+
+doc.setFont(undefined, "normal");
+
+const messageLines = doc.splitTextToSize(message, 170);
+
+messageLines.forEach(line => {
+  y = checkPageBreak(y);
+  doc.text(line, 20, y);
+  y += 6;
+});
+
+  /* ==========================
+     FOOTER TERMS
+  ========================== */
+  doc.setFontSize(10);
+  doc.setFont(undefined, "italic");
+  doc.setFontSize(10);
+  doc.setFont(undefined, "italic");
+
+let footerY = pageHeight - 10;
+
+doc.text(
+  "Estimate valid for 14 days. A 50% deposit is required before work begins.",
+  105,
+  footerY,
+  { align: "center" }
+);
+
+  doc.save(`Invoice_${invoiceNumber}.pdf`);
+}
 
   if (form) {
     form.addEventListener("submit", e => {
