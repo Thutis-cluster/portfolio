@@ -655,6 +655,7 @@ footer {
 
   /* ===== HERO ===== */
   .hero {
+    min-height: fit-content !important;
     margin-top: 70px;
     padding: 30% 5% 20%;
     text-align: center;
