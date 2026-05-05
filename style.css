@@ -618,41 +618,98 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
   }
 
-  /* NAV (hidden by default) */
+  /* NAV BASE (hidden state) */
   nav {
     position: absolute;
     top: 70px;
     left: 0;
     width: 100%;
-    background: var(--card);
+
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
 
-    display: none; /* 🔥 important */
+    display: flex;
     flex-direction: column;
     gap: 18px;
     padding: 20px;
+
+    /* 🔥 animation setup */
+    opacity: 0;
+    transform: translateY(-15px) scale(0.98);
+    pointer-events: none;
+
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* SHOW NAV */
+  body.dark nav {
+    background: rgba(2, 6, 23, 0.95);
+  }
+
+  /* ACTIVE (visible state) */
   nav.active {
-    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
   }
 
   nav a {
     margin: 0;
     font-size: 1rem;
+    padding: 10px 0;
+    position: relative;
+  }
+
+  /* 🔥 subtle hover underline animation */
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 4px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
+  }
+
+  nav a:hover::after {
+    width: 100%;
   }
 
   /* MENU BUTTON */
   .menu-btn {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     cursor: pointer;
-    margin-left: 0px;
+    transition: transform 0.25s ease;
   }
 
+  .menu-btn:hover {
+    transform: scale(1.1);
+  }
+
+  /* ===== OVERLAY ===== */
+   #nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+#nav-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+   
   /* ===== HERO ===== */
   .hero {
     min-height: fit-content !important;
